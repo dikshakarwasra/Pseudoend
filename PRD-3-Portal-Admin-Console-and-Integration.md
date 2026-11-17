@@ -1,4 +1,4 @@
-# sudoend — Product Requirements Document (PRD 3 of 4)
+﻿# pseudoend â€” Product Requirements Document (PRD 3 of 4)
 ## Document 3: Developer Web Portal, Universal Frontend Integration Engine & Administrative Governance Console
 
 ---
@@ -31,25 +31,25 @@
 > **Objective:** Understand how modern web apps run in the cloud with \$0.00 server costs using static hosting and content distribution networks.
 
 ### 1.1 How Web Apps Run Without a Dedicated Web Server
-Instead of paying \$10–\$20/month for an Apache or Nginx virtual machine, modern frontends (built with React, Vite, or Next.js static export) are simply compiled into plain HTML, JavaScript, and CSS files:
+Instead of paying \$10â€“\$20/month for an Apache or Nginx virtual machine, modern frontends (built with React, Vite, or Next.js static export) are simply compiled into plain HTML, JavaScript, and CSS files:
 ```
 [User Browser]
-       │
-       ▼
+       â”‚
+       â–¼
 [Amazon CloudFront CDN (Global Edge Caching)]
-       │ (Cached static files delivered in < 20ms)
-       ▼
+       â”‚ (Cached static files delivered in < 20ms)
+       â–¼
 [Amazon S3 Bucket (Storage for index.html, bundle.js, style.css)]
 ```
 - **S3 (Simple Storage Service):** Acts like an infinitely scalable hard drive in the cloud. It costs pennies per gigabyte (under 5 GB is 100% free under AWS Free Tier).
-- **CloudFront:** AWS’s global Content Delivery Network. It copies your files to servers in over 400 cities worldwide, provides free HTTPS/SSL certificates, and serves your website instantly.
+- **CloudFront:** AWSâ€™s global Content Delivery Network. It copies your files to servers in over 400 cities worldwide, provides free HTTPS/SSL certificates, and serves your website instantly.
 - **Handling Client-Side Routing:** In a Single Page App (SPA), when a user refreshes `/admin` or `/dashboard`, S3 normally returns a `404 Not Found` because no file named `admin` exists on disk. CloudFront is configured with a **Custom Error Response** that automatically rewrites 404s back to `/index.html` with an HTTP 200, allowing the client-side JavaScript router to handle the page seamlessly.
 
 ---
 
 ## 2. Developer Portal UI/UX Architecture
 
-The `sudoend` Developer Portal is engineered with a modern, high-contrast, developer-first aesthetic (clean dark mode by default, inspired by Vercel, Linear, and Supabase).
+The `pseudoend` Developer Portal is engineered with a modern, high-contrast, developer-first aesthetic (clean dark mode by default, inspired by Vercel, Linear, and Supabase).
 
 ### Tech Stack Recommendation:
 - **Framework:** React 18 / Vite or Next.js (Static Export `output: 'export'`)
@@ -80,7 +80,7 @@ The Mock Studio is the primary workspace where developers configure their mock e
 
 ```
 +------------------------------------------------------------------------------------+
-|  [+ New Route]   Project: My React Ecommerce App    Base URL: https://api.sudoend...|
+|  [+ New Route]   Project: My React Ecommerce App    Base URL: https://api.pseudoend...|
 +------------------------------------------------------------------------------------+
 | Method | Path               | Status | Latency | Chaos | Actions                   |
 |--------|--------------------|--------|---------|-------|---------------------------|
@@ -103,14 +103,14 @@ The Mock Studio is the primary workspace where developers configure their mock e
 ## 5. Live Request Inspector & Debugger
 
 To make frontend troubleshooting effortless, the portal includes an interactive **Live Network Inspector** panel:
-- Whenever a request hits any endpoint in the user’s project, the transaction is logged with:
+- Whenever a request hits any endpoint in the userâ€™s project, the transaction is logged with:
   - Timestamp
   - HTTP Verb & Exact Path
   - Client IP & User-Agent
   - Response Code & Execution Time (e.g., `200 OK - 182ms`)
   - Request Headers & Body JSON
   - Returned Response JSON
-- **Frontend Benefit:** If a frontend developer’s `fetch()` call is failing, they can open the Inspector and immediately see whether their headers or payload were formatted incorrectly.
+- **Frontend Benefit:** If a frontend developerâ€™s `fetch()` call is failing, they can open the Inspector and immediately see whether their headers or payload were formatted incorrectly.
 
 ---
 
@@ -129,9 +129,9 @@ export function useProducts() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('https://api.sudoend.dev/mock/proj_987/api/v1/products', {
+    fetch('https://api.pseudoend.dev/mock/proj_987/api/v1/products', {
       headers: {
-        'x-sudoend-key': 'sk_test_demo12345',
+        'x-pseudoend-key': 'sk_test_demo12345',
         'Content-Type': 'application/json'
       }
     })
@@ -156,8 +156,8 @@ export const useGetProducts = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const res = await fetch('https://api.sudoend.dev/mock/proj_987/api/v1/products', {
-        headers: { 'x-sudoend-key': 'sk_test_demo12345' }
+      const res = await fetch('https://api.pseudoend.dev/mock/proj_987/api/v1/products', {
+        headers: { 'x-pseudoend-key': 'sk_test_demo12345' }
       });
       if (!res.ok) throw new Error('Network response was not ok');
       return res.json();
@@ -172,11 +172,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 Future<Map<String, dynamic>> fetchProducts() async {
-  final url = Uri.parse('https://api.sudoend.dev/mock/proj_987/api/v1/products');
+  final url = Uri.parse('https://api.pseudoend.dev/mock/proj_987/api/v1/products');
   final response = await http.get(
     url,
     headers: {
-      'x-sudoend-key': 'sk_test_demo12345',
+      'x-pseudoend-key': 'sk_test_demo12345',
       'Content-Type': 'application/json',
     },
   );
@@ -193,13 +193,13 @@ Future<Map<String, dynamic>> fetchProducts() async {
 ```swift
 import Foundation
 
-struct SudoendClient {
+struct PseudoendClient {
     static func fetchProducts() async throws -> Data {
-        guard let url = URL(string: "https://api.sudoend.dev/mock/proj_987/api/v1/products") else {
+        guard let url = URL(string: "https://api.pseudoend.dev/mock/proj_987/api/v1/products") else {
             throw URLError(.badURL)
         }
         var request = URLRequest(url: url)
-        request.setValue("sk_test_demo12345", forHTTPHeaderField: "x-sudoend-key")
+        request.setValue("sk_test_demo12345", forHTTPHeaderField: "x-pseudoend-key")
         
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
@@ -217,7 +217,7 @@ struct SudoendClient {
 ### 7.1 Visual Credit Progress Bar
 Prominently displayed in the portal header:
 ```
-[⚡ Daily Credits: 420 / 1,000 used today]  [Request Higher Limit]
+[âš¡ Daily Credits: 420 / 1,000 used today]  [Request Higher Limit]
 ```
 - Green: < 70% usage.
 - Yellow: 70% - 90% usage.
@@ -228,7 +228,7 @@ When a developer reaches their limit or starts a major project:
 - Clicking **"Request Higher Limit"** opens a simple modal:
   - **Requested Tier:** Developer (10,000 req/day) or Pro (50,000 req/day).
   - **Project Context:** Brief description of what frontend is being developed.
-  - **Security Assurance Notice:** *"sudoend is a community service with zero paid upgrades. Requests are approved by the administrator to prevent cloud credit exhaustion."*
+  - **Security Assurance Notice:** *"pseudoend is a community service with zero paid upgrades. Requests are approved by the administrator to prevent cloud credit exhaustion."*
 - Submitting the form creates a record in DynamoDB with `PK: QUOTA_REQ#<id>`, `SK: PENDING`.
 
 ---
@@ -240,7 +240,7 @@ If a user logs in with an account having `role: "admin"`, an **"Admin Console"**
 ### 8.1 Admin Dashboard Features
 ```
 +------------------------------------------------------------------------------------+
-|  SUDOEND ADMIN CONSOLE                                        [Cloud Status: $0.00]|
+|  PSEUDOEND ADMIN CONSOLE                                        [Cloud Status: $0.00]|
 +------------------------------------------------------------------------------------+
 | Total Users: 48    | Daily Requests: 8,421   | Pending Upgrade Requests: 3        |
 +------------------------------------------------------------------------------------+
@@ -269,13 +269,13 @@ Filter: [Search user email...]
 ### SYSTEM ROLE: Senior Staff Frontend Architect & React / Tailwind Specialist
 
 ### MISSION:
-Generate the complete production Single Page Application (SPA) for the "sudoend" Developer Portal and Admin Console.
+Generate the complete production Single Page Application (SPA) for the "pseudoend" Developer Portal and Admin Console.
 
 ### TECHNICAL STACK:
 - React 18, TypeScript, Vite.
 - Tailwind CSS (Dark theme by default with clean borders, slate-900 background, emerald accents).
 - Lucide React icons, Radix UI components (Dialog, Tabs, Toast, DropdownMenu).
-- Axios / TanStack Query for communication with the `sudoend` Management API.
+- Axios / TanStack Query for communication with the `pseudoend` Management API.
 
 ### REQUIRED VIEWS & COMPONENTS:
 1. `AuthView.tsx`: Tabbed Sign In / Sign Up with error banners and automatic token storage in localStorage.
@@ -307,7 +307,7 @@ Generate the complete production Single Page Application (SPA) for the "sudoend"
 ### 10.1 Running the Portal Locally
 1. Navigate to the frontend directory:
    ```bash
-   cd /Users/kalyugwasi/Documents/Sudoend/portal
+   cd /Users/kalyugwasi/Documents/Pseudoend/portal
    npm install
    ```
 2. Start the development server:
@@ -318,12 +318,12 @@ Generate the complete production Single Page Application (SPA) for the "sudoend"
 
 ### 10.2 Creating Your First Admin Account
 By default, the first user registered in a fresh deployment can be designated as the Admin:
-1. Register an account on the web portal: `admin@sudoend.local` with password `AdminPassword123!`.
+1. Register an account on the web portal: `admin@pseudoend.local` with password `AdminPassword123!`.
 2. Run this one-line AWS CLI command to grant admin privileges:
    ```bash
    aws dynamodb update-item \
-     --table-name sudoend-main \
-     --key '{"PK": {"S": "USER#admin@sudoend.local"}, "SK": {"S": "METADATA"}}' \
+     --table-name pseudoend-main \
+     --key '{"PK": {"S": "USER#admin@pseudoend.local"}, "SK": {"S": "METADATA"}}' \
      --update-expression "SET #r = :role" \
      --expression-attribute-names '{"#r": "role"}' \
      --expression-attribute-values '{":role": {"S": "admin"}}'
@@ -334,7 +334,7 @@ By default, the first user registered in a fresh deployment can be designated as
 To push your compiled web app to live production:
 ```bash
 npm run build
-aws s3 sync dist/ s3://<your-sudoend-portal-bucket-name> --delete
+aws s3 sync dist/ s3://<your-pseudoend-portal-bucket-name> --delete
 aws cloudfront create-invalidation --distribution-id <your-cf-dist-id> --paths "/*"
 ```
 Your live URL will be active worldwide at zero hosting cost!

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# sudoend — Emergency 1-Click Stack Teardown & Obliteration Script
+# Pseudoend — Emergency 1-Click Stack Teardown & Obliteration Script
 # ==============================================================================
 set -euo pipefail
 
-echo "⚠️  WARNING: This will permanently destroy all sudoend cloud resources,"
+echo "⚠️  WARNING: This will permanently destroy all Pseudoend cloud resources,"
 echo "   including DynamoDB mock data, API Gateways, Lambdas, and S3 assets."
 read -p "Are you sure you want to proceed? (y/N): " confirm
 
@@ -24,8 +24,8 @@ if [ -d "infrastructure" ]; then
   echo "💥 Running Terraform Destroy..."
   terraform destroy -auto-approve || true
   cd ..
-  echo "✅ All sudoend cloud infrastructure has been cleanly removed."
-  echo "Your AWS account is 100% free of sudoend resources."
+  echo "✅ All Pseudoend cloud infrastructure has been cleanly removed."
+  echo "Your AWS account is 100% free of Pseudoend resources."
 else
   echo "No infrastructure directory found."
 fi

@@ -40,7 +40,7 @@ export function useMockData() {
     fetch('${fullUrl}', {
       method: '${route.method}',
       headers: {
-        'x-sudoend-key': '${effectiveKey}',
+        'x-pseudoend-key': '${effectiveKey}',
         'Content-Type': 'application/json'
       }
     })
@@ -66,7 +66,7 @@ export function useQueryMock() {
       const res = await fetch('${fullUrl}', {
         method: '${route.method}',
         headers: {
-          'x-sudoend-key': '${effectiveKey}',
+          'x-pseudoend-key': '${effectiveKey}',
           'Content-Type': 'application/json'
         }
       });
@@ -92,7 +92,7 @@ export default {
           method: '${route.method.toLowerCase()}',
           url: '${fullUrl}',
           headers: {
-            'x-sudoend-key': '${effectiveKey}'
+            'x-pseudoend-key': '${effectiveKey}'
           }
         });
         data.value = response.data;
@@ -119,7 +119,7 @@ export default {
       const res = await fetch('${fullUrl}', {
         method: '${route.method}',
         headers: {
-          'x-sudoend-key': '${effectiveKey}',
+          'x-pseudoend-key': '${effectiveKey}',
           'Content-Type': 'application/json'
         }
       });
@@ -149,7 +149,7 @@ Future<dynamic> fetchMockData() async {
   final response = await http.${route.method === 'POST' ? 'post' : 'get'}(
     url,
     headers: {
-      'x-sudoend-key': '${effectiveKey}',
+      'x-pseudoend-key': '${effectiveKey}',
       'Content-Type': 'application/json',
     },
   );
@@ -171,7 +171,7 @@ func fetchMock() async throws -> [String: Any] {
     
     var request = URLRequest(url: url)
     request.httpMethod = "${route.method}"
-    request.setValue("${effectiveKey}", forHTTPHeaderField: "x-sudoend-key")
+    request.setValue("${effectiveKey}", forHTTPHeaderField: "x-pseudoend-key")
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     
     let (data, response) = try await URLSession.shared.data(for: request)
@@ -185,7 +185,7 @@ func fetchMock() async throws -> [String: Any] {
 
     curl: `# Run directly in your terminal:
 curl -X ${route.method} "${fullUrl}" \\
-     -H "x-sudoend-key: ${effectiveKey}" \\
+     -H "x-pseudoend-key: ${effectiveKey}" \\
      -H "Content-Type: application/json"`
   };
 

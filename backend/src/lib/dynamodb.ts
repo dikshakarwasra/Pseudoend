@@ -12,5 +12,5 @@ export const docClient = DynamoDBDocumentClient.from(client, {
   }
 });
 
-export const TABLE_NAME = process.env.TABLE_NAME || 'sudoend-main';
+export const TABLE_NAME = process.env.TABLE_NAME || 'pseudoend-main';
 

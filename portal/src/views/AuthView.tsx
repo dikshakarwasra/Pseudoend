@@ -51,7 +51,7 @@ export const AuthView: React.FC<AuthViewProps> = ({ onAuthSuccess, apiBaseUrl })
               <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
                 <Terminal className="w-6 h-6" />
               </div>
-              <span className="font-bold text-2xl tracking-tight text-white">sudoend</span>
+              <span className="font-bold text-2xl tracking-tight text-white">Pseudoend</span>
             </div>
 
             <h2 className="text-xl font-bold text-white mb-2 leading-snug">

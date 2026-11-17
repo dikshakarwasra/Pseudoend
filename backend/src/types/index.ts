@@ -1,5 +1,5 @@
 /**
- * sudoend — Core Type Definitions & Data Models
+ * Pseudoend — Core Type Definitions & Data Models
  * Single source of truth for backend services, DynamoDB models, and API contracts.
  */
 

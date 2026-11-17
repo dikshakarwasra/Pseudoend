@@ -12,7 +12,7 @@ variable "environment" {
 
 variable "project_name" {
   type        = string
-  default     = "sudoend"
+  default     = "pseudoend"
   description = "Base project name used for resource naming"
 }
 

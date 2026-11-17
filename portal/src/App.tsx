@@ -9,12 +9,12 @@ import { MockStudioView } from './views/MockStudioView.js';
 import { LiveInspectorView } from './views/LiveInspectorView.js';
 import { AdminConsoleView } from './views/AdminConsoleView.js';
 
-const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'https://api.sudoend.dev';
+const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'https://api.pseudoend.dev';
 
 export function App() {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('sudoend_token'));
+  const [token, setToken] = useState<string | null>(localStorage.getItem('pseudoend_token') || localStorage.getItem('sudoend_token'));
   const [user, setUser] = useState<User | null>(() => {
-    const cached = localStorage.getItem('sudoend_user');
+    const cached = localStorage.getItem('pseudoend_user') || localStorage.getItem('sudoend_user');
     return cached ? JSON.parse(cached) : null;
   });
   const [projects, setProjects] = useState<Project[]>([]);
@@ -44,7 +44,7 @@ export function App() {
       if (userRes.ok) {
         const userData = await userRes.json();
         setUser(userData.user);
-        localStorage.setItem('sudoend_user', JSON.stringify(userData.user));
+        localStorage.setItem('pseudoend_user', JSON.stringify(userData.user));
       }
 
       if (projRes.ok) {
@@ -84,8 +84,10 @@ export function App() {
   const handleAuthSuccess = (newToken: string, newUser: User, initialProject?: Project) => {
     setToken(newToken);
     setUser(newUser);
-    localStorage.setItem('sudoend_token', newToken);
-    localStorage.setItem('sudoend_user', JSON.stringify(newUser));
+    localStorage.setItem('pseudoend_token', newToken);
+    localStorage.setItem('pseudoend_user', JSON.stringify(newUser));
+    localStorage.removeItem('sudoend_token');
+    localStorage.removeItem('sudoend_user');
     if (initialProject) {
       setProjects([initialProject]);
       setActiveProject(initialProject);
@@ -100,13 +102,15 @@ export function App() {
     setUser(null);
     setProjects([]);
     setRoutes([]);
+    localStorage.removeItem('pseudoend_token');
+    localStorage.removeItem('pseudoend_user');
     localStorage.removeItem('sudoend_token');
     localStorage.removeItem('sudoend_user');
   };
 
   const handleDeleteAccount = async () => {
     if (!token) return;
-    if (confirm('Are you sure you want to PERMANENTLY delete your sudoend account and all mock routes? This cannot be undone.')) {
+    if (confirm('Are you sure you want to PERMANENTLY delete your Pseudoend account and all mock routes? This cannot be undone.')) {
       try {
         await fetch(`${API_BASE_URL}/api/auth/delete-account`, {
           method: 'POST',

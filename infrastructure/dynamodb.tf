@@ -1,5 +1,10 @@
-resource "aws_dynamodb_table" "sudoend_main" {
-  name         = "sudoend-main"
+moved {
+  from = aws_dynamodb_table.sudoend_main
+  to   = aws_dynamodb_table.pseudoend_main
+}
+
+resource "aws_dynamodb_table" "pseudoend_main" {
+  name         = "${var.project_name}-main"
   billing_mode = "PAY_PER_REQUEST" # Guaranteed zero idle cost
   hash_key     = "PK"
   range_key    = "SK"
@@ -41,7 +46,7 @@ resource "aws_dynamodb_table" "sudoend_main" {
   }
 
   tags = {
-    Name = "sudoend-main-table"
+    Name = "${var.project_name}-main-table"
   }
 }
 

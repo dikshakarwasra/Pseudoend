@@ -1,6 +1,6 @@
 # IAM Role for Lambda Functions
 resource "aws_iam_role" "lambda_exec" {
-  name = "sudoend-lambda-exec-role-${random_string.suffix.result}"
+  name = "${var.project_name}-lambda-exec-role-${random_string.suffix.result}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -22,8 +22,8 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
 
 # Scoped DynamoDB Least-Privilege Policy
 resource "aws_iam_policy" "dynamodb_access" {
-  name        = "sudoend-dynamodb-policy-${random_string.suffix.result}"
-  description = "Scoped DynamoDB access strictly for sudoend-main table"
+  name        = "${var.project_name}-dynamodb-policy-${random_string.suffix.result}"
+  description = "Scoped DynamoDB access strictly for ${var.project_name}-main table"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -39,8 +39,8 @@ resource "aws_iam_policy" "dynamodb_access" {
           "dynamodb:Scan"
         ]
         Resource = [
-          aws_dynamodb_table.sudoend_main.arn,
-          "${aws_dynamodb_table.sudoend_main.arn}/index/*"
+          aws_dynamodb_table.pseudoend_main.arn,
+          "${aws_dynamodb_table.pseudoend_main.arn}/index/*"
         ]
       }
     ]
@@ -54,12 +54,12 @@ resource "aws_iam_role_policy_attachment" "lambda_dynamodb_attach" {
 
 # CloudWatch Log Groups (Strictly 7-day retention for Free Tier compliance)
 resource "aws_cloudwatch_log_group" "mock_engine_logs" {
-  name              = "/aws/lambda/sudoend-mock-engine-fn-${random_string.suffix.result}"
+  name              = "/aws/lambda/${var.project_name}-mock-engine-fn-${random_string.suffix.result}"
   retention_in_days = 7
 }
 
 resource "aws_cloudwatch_log_group" "management_logs" {
-  name              = "/aws/lambda/sudoend-management-fn-${random_string.suffix.result}"
+  name              = "/aws/lambda/${var.project_name}-management-fn-${random_string.suffix.result}"
   retention_in_days = 7
 }
 
@@ -69,14 +69,14 @@ data "archive_file" "mock_engine_zip" {
   output_path = "${path.module}/mockEngine.zip"
 
   source {
-    content  = fileexists("${path.module}/../backend/dist/mockEngine.js") ? file("${path.module}/../backend/dist/mockEngine.js") : (fileexists("${path.module}/../backend/dist/handlers/mockEngine.js") ? file("${path.module}/../backend/dist/handlers/mockEngine.js") : "exports.handler = async () => ({ statusCode: 200, body: 'sudoend mock engine initializing...' });")
+    content  = fileexists("${path.module}/../backend/dist/mockEngine.js") ? file("${path.module}/../backend/dist/mockEngine.js") : (fileexists("${path.module}/../backend/dist/handlers/mockEngine.js") ? file("${path.module}/../backend/dist/handlers/mockEngine.js") : "exports.handler = async () => ({ statusCode: 200, body: 'pseudoend mock engine initializing...' });")
     filename = "index.js"
   }
 }
 
 # Mock Engine Lambda
 resource "aws_lambda_function" "mock_engine" {
-  function_name = "sudoend-mock-engine-fn-${random_string.suffix.result}"
+  function_name = "${var.project_name}-mock-engine-fn-${random_string.suffix.result}"
   role          = aws_iam_role.lambda_exec.arn
   handler       = "index.handler"
   runtime       = "nodejs20.x"
@@ -88,7 +88,7 @@ resource "aws_lambda_function" "mock_engine" {
 
   environment {
     variables = {
-      TABLE_NAME = aws_dynamodb_table.sudoend_main.name
+      TABLE_NAME = aws_dynamodb_table.pseudoend_main.name
     }
   }
 
@@ -104,14 +104,14 @@ data "archive_file" "management_zip" {
   output_path = "${path.module}/management.zip"
 
   source {
-    content  = fileexists("${path.module}/../backend/dist/management.js") ? file("${path.module}/../backend/dist/management.js") : (fileexists("${path.module}/../backend/dist/handlers/management.js") ? file("${path.module}/../backend/dist/handlers/management.js") : "exports.handler = async () => ({ statusCode: 200, body: 'sudoend management API initializing...' });")
+    content  = fileexists("${path.module}/../backend/dist/management.js") ? file("${path.module}/../backend/dist/management.js") : (fileexists("${path.module}/../backend/dist/handlers/management.js") ? file("${path.module}/../backend/dist/handlers/management.js") : "exports.handler = async () => ({ statusCode: 200, body: 'pseudoend management API initializing...' });")
     filename = "index.js"
   }
 }
 
 # Management Lambda
 resource "aws_lambda_function" "management" {
-  function_name = "sudoend-management-fn-${random_string.suffix.result}"
+  function_name = "${var.project_name}-management-fn-${random_string.suffix.result}"
   role          = aws_iam_role.lambda_exec.arn
   handler       = "index.handler"
   runtime       = "nodejs20.x"
@@ -123,8 +123,8 @@ resource "aws_lambda_function" "management" {
 
   environment {
     variables = {
-      TABLE_NAME = aws_dynamodb_table.sudoend_main.name
-      JWT_SECRET = "sudoend-secure-jwt-secret-${random_string.suffix.result}"
+      TABLE_NAME = aws_dynamodb_table.pseudoend_main.name
+      JWT_SECRET = "${var.project_name}-secure-jwt-secret-${random_string.suffix.result}"
     }
   }
 

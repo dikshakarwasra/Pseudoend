@@ -45,7 +45,7 @@ function jsonResponse(statusCode: number, data: any): APIGatewayResponse {
 }
 
 /**
- * Main Lambda Handler for sudoend Management API
+ * Main Lambda Handler for Pseudoend Management API
  */
 export async function handler(event: APIGatewayEventV2): Promise<APIGatewayResponse> {
   const method = event.requestContext?.http?.method?.toUpperCase() || 'GET';

@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div>
               <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                sudoend
+                Pseudoend
               </span>
               <span className="ml-2 text-xs font-mono uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 v1.0 serverless

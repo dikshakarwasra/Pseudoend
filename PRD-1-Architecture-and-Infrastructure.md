@@ -1,4 +1,4 @@
-# sudoend — Product Requirements Document (PRD 1 of 4)
+﻿# pseudoend â€” Product Requirements Document (PRD 1 of 4)
 ## Document 1: System Architecture, Ephemeral Cloud Infrastructure & Zero-Cost IaC Blueprint
 
 ---
@@ -25,7 +25,7 @@
 - **What is "Serverless"?**  
   In traditional hosting (like EC2 or VPS), you rent a computer running 24/7. Even if nobody visits your website, you pay every second. With **AWS Serverless (Lambda & API Gateway)**, code sits dormant. When an HTTP request arrives, AWS spins up a lightweight container in 50 milliseconds, executes your code, returns the response, and terminates. **Zero requests = Zero cents billed.**
 - **What is DynamoDB?**  
-  A managed NoSQL key-value database. Unlike MySQL/PostgreSQL instances (RDS) that cost \$15–\$50/month just staying powered on, DynamoDB in "On-Demand" mode charges strictly per read/write. Under the AWS Free Tier, you get 25 GB of storage and 25 Read/Write Capacity Units permanently free.
+  A managed NoSQL key-value database. Unlike MySQL/PostgreSQL instances (RDS) that cost \$15â€“\$50/month just staying powered on, DynamoDB in "On-Demand" mode charges strictly per read/write. Under the AWS Free Tier, you get 25 GB of storage and 25 Read/Write Capacity Units permanently free.
 - **What is Infrastructure as Code (IaC)?**  
   Instead of clicking buttons in the AWS Web Console (which leads to mistakes and forgotten running resources), we write configuration files (Terraform or AWS SAM). One command creates the entire cloud backend in 3 minutes; one command tears everything down cleanly.
 
@@ -34,21 +34,21 @@ Follow these exact steps in your AWS Console before running any code:
 
 ```
 [Create AWS Account]
-       │
-       ▼
-[Create IAM Admin User] ────► Never use Root Account credentials!
-       │
-       ▼
-[Set Hard Billing Alarm] ───► CloudWatch Alarm triggers at $0.01 / $1.00
-       │
-       ▼
-[Install AWS CLI & Authenticate] ──► aws configure
+       â”‚
+       â–¼
+[Create IAM Admin User] â”€â”€â”€â”€â–º Never use Root Account credentials!
+       â”‚
+       â–¼
+[Set Hard Billing Alarm] â”€â”€â”€â–º CloudWatch Alarm triggers at $0.01 / $1.00
+       â”‚
+       â–¼
+[Install AWS CLI & Authenticate] â”€â”€â–º aws configure
 ```
 
 1. **Never use the Root User for daily work:**
    - Log in to the AWS Management Console as Root.
    - Search for **IAM** (Identity and Access Management) -> **Users** -> **Create user**.
-   - Name: `sudoend-admin`. Check **Provide user access to the AWS Management Console**.
+   - Name: `pseudoend-admin`. Check **Provide user access to the AWS Management Console**.
    - Attach policy directly: `AdministratorAccess`.
    - Once created, generate **Access Keys** (Select "CLI"). Copy your `Access Key ID` and `Secret Access Key`.
 2. **Activate the Zero-Dollar AWS Budget Alarm:**
@@ -76,7 +76,7 @@ Follow these exact steps in your AWS Console before running any code:
    ```bash
    aws sts get-caller-identity
    ```
-   *Expected output:* A JSON object showing your Account ID and `sudoend-admin` ARN.
+   *Expected output:* A JSON object showing your Account ID and `pseudoend-admin` ARN.
 
 ---
 
@@ -85,8 +85,8 @@ Follow these exact steps in your AWS Console before running any code:
 ### 2.1 Problem Statement
 Frontend developers (web, mobile, cross-platform) spend up to 40% of their early development cycles blocked waiting for backend APIs to be designed, deployed, and stabilized. Existing mocking solutions either require local Docker containers (consuming RAM and failing mobile device access), expensive SaaS subscriptions, or complex backend staging environments that cost money even when idle.
 
-### 2.2 Solution Overview: `sudoend`
-`sudoend` is a **zero-idle-cost, ephemeral backend engine** designed to provision instant mock REST/JSON endpoints, echo handlers, and dynamic state machines for frontend testing. It features:
+### 2.2 Solution Overview: `pseudoend`
+`pseudoend` is a **zero-idle-cost, ephemeral backend engine** designed to provision instant mock REST/JSON endpoints, echo handlers, and dynamic state machines for frontend testing. It features:
 - **Instant Cloud Spin-Up:** Fully deployed via a single command into any AWS Free Tier account.
 - **Zero Idle Billing:** \$0.00/month cost when idle through pure serverless architecture (Lambda, API Gateway v2, DynamoDB, S3/CloudFront).
 - **Universal Technology Compatibility:** Language-agnostic HTTP/HTTPS interface consumable by React, Vue, Svelte, iOS (Swift), Android (Kotlin), Flutter, Python, or simple cURL.
@@ -117,7 +117,7 @@ Frontend developers (web, mobile, cross-platform) spend up to 40% of their early
                                               v
                               +-------------------------------+
                               |    CloudFront CDN & S3        |
-                              |  (Hosts sudoend Web Portal)   |
+                              |  (Hosts pseudoend Web Portal)   |
                               +---------------+---------------+
                                               |
                      +------------------------+------------------------+
@@ -142,7 +142,7 @@ Frontend developers (web, mobile, cross-platform) spend up to 40% of their early
                                               v
                              +---------------------------------+
                              |   Amazon DynamoDB (On-Demand)   |
-                             |  Single Table (`sudoend-main`)  |
+                             |  Single Table (`pseudoend-main`)  |
                              |  With Native TTL Auto-Eviction  |
                              +---------------------------------+
 ```
@@ -154,9 +154,9 @@ sequenceDiagram
     actor Frontend as Client Frontend App
     participant APIGW as API Gateway v2
     participant Lambda as Mock Engine Lambda
-    participant DDB as DynamoDB (sudoend-main)
+    participant DDB as DynamoDB (pseudoend-main)
 
-    Frontend->>APIGW: POST /mock/proj_987/users (Header: x-sudoend-key: sk_test_123)
+    Frontend->>APIGW: POST /mock/proj_987/users (Header: x-pseudoend-key: sk_test_123)
     APIGW->>Lambda: Forward Request Context + Body
     Lambda->>DDB: Validate API Key & Decrement Token Bucket (Atomic Update)
     alt Rate Limit Exceeded or Zero Credits
@@ -175,7 +175,7 @@ sequenceDiagram
 
 ## 5. Cloud Services Breakdown & Cost-Free Tier Mapping
 
-| AWS Service | Role in `sudoend` | AWS Free Tier Monthly Allowance | Expected `sudoend` Idle Cost | Safeguard Mechanism |
+| AWS Service | Role in `pseudoend` | AWS Free Tier Monthly Allowance | Expected `pseudoend` Idle Cost | Safeguard Mechanism |
 | :--- | :--- | :--- | :--- | :--- |
 | **AWS Lambda** | Executes core mock logic and management APIs | 1,000,000 requests/month & 3.2M seconds compute | **\$0.00** | Max memory capped at 256MB; execution timeout 3s |
 | **API Gateway v2 (HTTP API)** | High-speed, low-latency API router | 1,000,000 requests/month free for first 12 months (then \$1.00/M) | **\$0.00** | Throttling limits configured at route level |
@@ -188,7 +188,7 @@ sequenceDiagram
 
 ## 6. Single-Table Database Design (DynamoDB)
 
-To prevent resource sprawl and preserve the permanent free tier, `sudoend` uses a **Single Table Design** named `sudoend-main`.
+To prevent resource sprawl and preserve the permanent free tier, `pseudoend` uses a **Single Table Design** named `pseudoend-main`.
 
 ### 6.1 Key Schema Attributes
 - **Primary Partition Key (`PK`):** String (Entity Identifier)
@@ -211,16 +211,16 @@ To prevent resource sprawl and preserve the permanent free tier, `sudoend` uses 
 
 ## 7. Ephemeral Lifecycle & Automatic Teardown Engine
 
-To guarantee that idle projects and mock endpoints do not accumulate stale data or consume storage, `sudoend` enforces an automated ephemerality engine:
+To guarantee that idle projects and mock endpoints do not accumulate stale data or consume storage, `pseudoend` enforces an automated ephemerality engine:
 
 ```
-[Route Created] ──► Sets DynamoDB TTL = CurrentTime + 7 Days (or custom TTL)
-                         │
-                         ▼
-[DynamoDB Native TTL Daemon] ──► Automatically purges expired records at zero compute cost
-                         │
-                         ▼
-[Teardown Script: teardown.sh] ──► Can destroy entire AWS stack in 1 command if desired
+[Route Created] â”€â”€â–º Sets DynamoDB TTL = CurrentTime + 7 Days (or custom TTL)
+                         â”‚
+                         â–¼
+[DynamoDB Native TTL Daemon] â”€â”€â–º Automatically purges expired records at zero compute cost
+                         â”‚
+                         â–¼
+[Teardown Script: teardown.sh] â”€â”€â–º Can destroy entire AWS stack in 1 command if desired
 ```
 
 1. **Native DynamoDB TTL Auto-Purge:**
@@ -237,23 +237,23 @@ We choose **Terraform** (with an optional AWS SAM alternative) for infrastructur
 
 ### 8.1 Required Directory Hierarchy
 ```text
-sudoend/
-├── infrastructure/
-│   ├── main.tf                 # Core provider and state definitions
-│   ├── apigateway.tf           # API Gateway v2 HTTP API and routes
-│   ├── lambda.tf               # Lambda function definitions and permissions
-│   ├── dynamodb.tf             # Single-table schema and TTL configuration
-│   ├── s3_cloudfront.tf        # Web portal hosting and distribution
-│   ├── outputs.tf              # Terminal output: Portal URL, Mock Base URL
-│   └── variables.tf            # Configurable parameters (region, environment)
+pseudoend/
+â”œâ”€â”€ infrastructure/
+â”‚   â”œâ”€â”€ main.tf                 # Core provider and state definitions
+â”‚   â”œâ”€â”€ apigateway.tf           # API Gateway v2 HTTP API and routes
+â”‚   â”œâ”€â”€ lambda.tf               # Lambda function definitions and permissions
+â”‚   â”œâ”€â”€ dynamodb.tf             # Single-table schema and TTL configuration
+â”‚   â”œâ”€â”€ s3_cloudfront.tf        # Web portal hosting and distribution
+â”‚   â”œâ”€â”€ outputs.tf              # Terminal output: Portal URL, Mock Base URL
+â”‚   â””â”€â”€ variables.tf            # Configurable parameters (region, environment)
 ```
 
 ### 8.2 Declarative Infrastructure Definitions
 
 #### `infrastructure/dynamodb.tf`
 ```hcl
-resource "aws_dynamodb_table" "sudoend_main" {
-  name         = "sudoend-main"
+resource "aws_dynamodb_table" "pseudoend_main" {
+  name         = "pseudoend-main"
   billing_mode = "PAY_PER_REQUEST" # Zero idle cost
   hash_key     = "PK"
   range_key    = "SK"
@@ -295,7 +295,7 @@ resource "aws_dynamodb_table" "sudoend_main" {
   }
 
   tags = {
-    Project     = "sudoend"
+    Project     = "pseudoend"
     Environment = var.environment
   }
 }
@@ -304,13 +304,13 @@ resource "aws_dynamodb_table" "sudoend_main" {
 #### `infrastructure/apigateway.tf`
 ```hcl
 resource "aws_apigatewayv2_api" "http_api" {
-  name          = "sudoend-http-api"
+  name          = "pseudoend-http-api"
   protocol_type = "HTTP"
 
   cors_configuration {
     allow_origins = ["*"]
     allow_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
-    allow_headers = ["Authorization", "Content-Type", "x-sudoend-key"]
+    allow_headers = ["Authorization", "Content-Type", "x-pseudoend-key"]
     max_age       = 300
   }
 }
@@ -338,22 +338,22 @@ resource "aws_apigatewayv2_stage" "default" {
 ### SYSTEM ROLE: Senior Principal AWS Solutions Architect & Terraform Specialist
 
 ### MISSION:
-Generate the complete, production-ready Terraform IaC codebase for project "sudoend" targeting an AWS Free Tier account with a hard requirement of $0.00 idle cost.
+Generate the complete, production-ready Terraform IaC codebase for project "pseudoend" targeting an AWS Free Tier account with a hard requirement of $0.00 idle cost.
 
 ### ARCHITECTURAL CONSTRAINTS:
 1. No EC2 instances, no VPC NAT Gateways, no provisioned RDS or Redis.
 2. API Gateway v2 (HTTP API) with `$default` auto-deploying stage and CORS enabled for all origins.
-3. DynamoDB table named `sudoend-main` with:
+3. DynamoDB table named `pseudoend-main` with:
    - Partition Key `PK` (String), Sort Key `SK` (String)
    - Billing mode: `PAY_PER_REQUEST`
    - TTL enabled on attribute `TTL`
    - Global Secondary Index `GSI1` (Hash `GSI1PK`, Range `GSI1SK`, Projection `ALL`)
 4. Two Node.js 20.x AWS Lambda functions (bundled as zip files):
-   - `sudoend-management-fn`: Handles `/api/auth/*`, `/api/user/*`, `/api/admin/*`, `/api/routes/*`
-   - `sudoend-mock-engine-fn`: Handles `/mock/{proxy+}` with any HTTP method
+   - `pseudoend-management-fn`: Handles `/api/auth/*`, `/api/user/*`, `/api/admin/*`, `/api/routes/*`
+   - `pseudoend-mock-engine-fn`: Handles `/mock/{proxy+}` with any HTTP method
 5. Minimum IAM execution policies:
    - AWSLambdaBasicExecutionRole (CloudWatch logs limited to 7-day retention)
-   - DynamoDB Query, GetItem, PutItem, UpdateItem, DeleteItem permissions strictly scoped to `sudoend-main` table ARN.
+   - DynamoDB Query, GetItem, PutItem, UpdateItem, DeleteItem permissions strictly scoped to `pseudoend-main` table ARN.
 6. S3 Bucket for static website hosting with CloudFront Distribution configured for SPA (redirect 404 to index.html).
 
 ### OUTPUT DELIVERABLES REQUIRED:
@@ -369,9 +369,9 @@ Generate the complete, production-ready Terraform IaC codebase for project "sudo
 > **Objective:** Verify everything is running correctly without spending any money.
 
 ### 10.1 Deployment Steps
-1. Open your terminal in the `sudoend` project root:
+1. Open your terminal in the `pseudoend` project root:
    ```bash
-   cd /Users/kalyugwasi/Documents/Sudoend
+   cd /Users/kalyugwasi/Documents/Pseudoend
    ```
 2. Run the deployment script:
    ```bash
@@ -395,20 +395,20 @@ curl -i https://<your-api-id>.execute-api.us-east-1.amazonaws.com/api/health
 # Expected response:
 # HTTP/2 200
 # content-type: application/json
-# {"status":"healthy","service":"sudoend","timestamp":1700000000}
+# {"status":"healthy","service":"pseudoend","timestamp":1700000000}
 
 # 2. Verify DynamoDB Table was created
-aws dynamodb describe-table --table-name sudoend-main --query "Table.TableStatus"
+aws dynamodb describe-table --table-name pseudoend-main --query "Table.TableStatus"
 # Expected output: "ACTIVE"
 
 # 3. Verify TTL is active on DynamoDB
-aws dynamodb describe-time-to-live --table-name sudoend-main --query "TimeToLiveDescription.TimeToLiveStatus"
+aws dynamodb describe-time-to-live --table-name pseudoend-main --query "TimeToLiveDescription.TimeToLiveStatus"
 # Expected output: "ENABLED"
 ```
 
 ### 10.3 Troubleshooting Common Errors
 - **Error: `AccessDeniedException` when running Terraform:**  
-  *Fix:* Your IAM user lacks permissions. Ensure `AdministratorAccess` is attached to your `sudoend-admin` IAM user.
+  *Fix:* Your IAM user lacks permissions. Ensure `AdministratorAccess` is attached to your `pseudoend-admin` IAM user.
 - **Error: `InvalidParameterValue: TTL already enabled`:**  
   *Fix:* Safe to ignore if re-running Terraform.
 - **How to completely destroy the deployment to avoid any future surprises:**  

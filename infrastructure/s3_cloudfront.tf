@@ -1,6 +1,6 @@
 # S3 Bucket for Hosting Developer Web Portal
 resource "aws_s3_bucket" "portal_bucket" {
-  bucket        = "sudoend-portal-${random_string.suffix.result}"
+  bucket        = "${var.project_name}-portal-${random_string.suffix.result}"
   force_destroy = true
 }
 
@@ -14,8 +14,8 @@ resource "aws_s3_bucket_ownership_controls" "portal_ownership" {
 
 # CloudFront Origin Access Control (OAC)
 resource "aws_cloudfront_origin_access_control" "oac" {
-  name                              = "sudoend-portal-oac-${random_string.suffix.result}"
-  description                       = "OAC for sudoend portal S3 bucket"
+  name                              = "${var.project_name}-portal-oac-${random_string.suffix.result}"
+  description                       = "OAC for ${var.project_name} portal S3 bucket"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -103,7 +103,7 @@ resource "aws_cloudfront_distribution" "portal_dist" {
   }
 
   tags = {
-    Name = "sudoend-portal-distribution"
+    Name = "${var.project_name}-portal-distribution"
   }
 }
 

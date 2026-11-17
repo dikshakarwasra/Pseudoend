@@ -3,7 +3,7 @@ import { APIGatewayResponse } from '../types/index.js';
 export const CORS_HEADERS: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-sudoend-key, x-requested-with',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-pseudoend-key, x-sudoend-key, x-requested-with',
   'Access-Control-Max-Age': '86400'
 };
 

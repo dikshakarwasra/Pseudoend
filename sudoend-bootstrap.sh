@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# sudoend — Master Zero-Cost 1-Click Bootstrap Engine
+# Pseudoend — Master Zero-Cost 1-Click Bootstrap Engine
 # ==============================================================================
 set -euo pipefail
 
 echo "=========================================================="
-echo "  🚀 Starting sudoend Deployment Engine..."
+echo "  🚀 Starting Pseudoend Deployment Engine..."
 echo "  Target: AWS Free Tier ($0.00 Idle Cost Architecture)"
 echo "=========================================================="
 
@@ -65,7 +65,7 @@ if [ -d "infrastructure" ]; then
   fi
 
   echo "=========================================================="
-  echo "  🎉 SUCCESS! sudoend is ready!"
+  echo "  🎉 SUCCESS! Pseudoend is ready!"
   echo "=========================================================="
   echo "  🌐 Developer Web Portal:  $CLOUDFRONT_URL"
   echo "  ⚡ Public Mock API Base:   $API_URL"

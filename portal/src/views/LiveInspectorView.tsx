@@ -47,7 +47,7 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
 
     try {
       const headers: Record<string, string> = {
-        'x-sudoend-key': activeProject.apiKey || activeProject.rawApiKeyPrefix || '',
+        'x-pseudoend-key': activeProject.apiKey || activeProject.rawApiKeyPrefix || '',
         'Content-Type': 'application/json'
       };
 

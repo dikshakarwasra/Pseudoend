@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { JwtPayload, UserRecord } from '../types/index.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'sudoend-secure-jwt-secret-replace-in-env';
+const JWT_SECRET = process.env.JWT_SECRET || 'pseudoend-secure-jwt-secret-replace-in-env';
 
 /**
  * Signs a JWT token with a 24-hour expiration.

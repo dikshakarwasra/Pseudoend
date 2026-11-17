@@ -19,6 +19,8 @@ export async function authenticateApiKey(
   // 1. Extract API key from headers (case-insensitive) or query string
   const headers = event.headers || {};
   let apiKey =
+    headers['x-pseudoend-key'] ||
+    headers['X-Pseudoend-Key'] ||
     headers['x-sudoend-key'] ||
     headers['X-Sudoend-Key'] ||
     headers['x-api-key'] ||
@@ -42,7 +44,7 @@ export async function authenticateApiKey(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           error: 'Unauthorized',
-          message: 'Missing API key. Provide your key via header "x-sudoend-key: sk_test_..." or query param "?key=sk_test_..."'
+          message: 'Missing API key. Provide your key via header "x-pseudoend-key: sk_test_..." or query param "?key=sk_test_..."'
         })
       })
     };

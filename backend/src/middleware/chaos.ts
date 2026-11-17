@@ -29,11 +29,11 @@ export async function applyChaos(
         statusCode: 500,
         headers: {
           'Content-Type': 'application/json',
-          'x-sudoend-chaos': 'true'
+          'x-pseudoend-chaos': 'true'
         },
         body: JSON.stringify({
           error: 'Internal Server Error',
-          message: `Simulated server fault triggered by sudoend Chaos Engine (Failure Rate: ${failureRatePercent}%).`,
+          message: `Simulated server fault triggered by Pseudoend Chaos Engine (Failure Rate: ${failureRatePercent}%).`,
           isSimulated: true
         })
       });

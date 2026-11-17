@@ -66,7 +66,7 @@ export async function checkRateLimit(
           },
           body: JSON.stringify({
             error: 'Too Many Requests',
-            message: `Daily credit quota of ${limit.toLocaleString()} requests exceeded. Upgrade requests can be submitted for free via the sudoend dashboard.`,
+            message: `Daily credit quota of ${limit.toLocaleString()} requests exceeded. Upgrade requests can be submitted for free via the Pseudoend dashboard.`,
             tier: user.tier,
             dailyLimit: limit,
             currentCount

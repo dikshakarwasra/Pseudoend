@@ -1,4 +1,4 @@
-# sudoend — Product Requirements Document (PRD 4 of 4)
+﻿# pseudoend â€” Product Requirements Document (PRD 4 of 4)
 ## Document 4: AI Implementation Master Blueprint, Prompt Engineering Pack & 1-Click Zero-Cost Runbook
 
 ---
@@ -12,7 +12,7 @@
    - Prompt Sequence 3: Management API, Auth & Admin Lambda
    - Prompt Sequence 4: Single Page Application (React / Vite / Tailwind)
    - Prompt Sequence 5: End-to-End Automated Test Suite
-4. **[One-Click Bootstrap Engine (`sudoend-bootstrap.sh`)](#4-one-click-bootstrap-engine-sudoend-bootstrapsh)**
+4. **[One-Click Bootstrap Engine (`pseudoend-bootstrap.sh`)](#4-one-click-bootstrap-engine-pseudoend-bootstrapsh)**
 5. **[Emergency Teardown & Safe Deletion Engine (`teardown.sh`)](#5-emergency-teardown--safe-deletion-engine-teardownsh)**
 6. **[Zero-Tolerance Cloud Billing Security Checklist](#6-zero-tolerance-cloud-billing-security-checklist)**
 7. **[Client Final Handover & Operational Verification Checklist](#7-client-final-handover--operational-verification-checklist)**
@@ -21,7 +21,7 @@
 
 ## 1. Client Master Runbook: From Zero to Live in 15 Minutes
 > **Target Audience:** Junior Cloud Developer (~1 month AWS experience)  
-> **Objective:** Take a brand new AWS Free Tier account and launch the entire `sudoend` backend, mock engine, and web dashboard in under 15 minutes with guaranteed \$0.00 cost.
+> **Objective:** Take a brand new AWS Free Tier account and launch the entire `pseudoend` backend, mock engine, and web dashboard in under 15 minutes with guaranteed \$0.00 cost.
 
 ### 1.1 Prerequisites Checklist
 Before executing the deployment, ensure your machine has the following tools installed (all are free and open-source):
@@ -38,10 +38,10 @@ terraform -v  # Required: Terraform v1.5 or higher
 ### 1.2 The 3-Step Fast-Track
 ```
 Step 1: Clone or navigate to the repository
-  $ cd /Users/kalyugwasi/Documents/Sudoend
+  $ cd /Users/kalyugwasi/Documents/Pseudoend
 
 Step 2: Run the automated 1-click bootstrap script
-  $ ./sudoend-bootstrap.sh
+  $ ./pseudoend-bootstrap.sh
 
 Step 3: Access your live global web portal and mock API!
   - Web Dashboard: https://d123456abcdef.cloudfront.net
@@ -53,62 +53,62 @@ Step 3: Access your live global web portal and mock API!
 ## 2. End-to-End Repository Topology
 
 ```text
-sudoend/
-├── PRD-1-Architecture-and-Infrastructure.md
-├── PRD-2-Core-Engine-Middleware-Security.md
-├── PRD-3-Portal-Admin-Console-and-Integration.md
-├── PRD-4-AI-Prompt-Pack-Runbook-and-Zero-Cost-Deployment.md
-├── sudoend-bootstrap.sh                 # 1-Click Master Deployment Script
-├── teardown.sh                          # 1-Click Master Stack Destruction Script
-├── infrastructure/                      # Terraform Cloud Infrastructure
-│   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-│   ├── dynamodb.tf
-│   ├── apigateway.tf
-│   ├── lambda.tf
-│   └── s3_cloudfront.tf
-├── backend/                             # Serverless AWS Lambda Source Code
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── src/
-│       ├── types/index.ts               # Shared TypeScript schemas & interfaces
-│       ├── handlers/
-│       │   ├── mockEngine.ts            # Public Mock API Router & Executor
-│       │   └── management.ts            # Auth, Route CRUD, Admin operations
-│       ├── middleware/
-│       │   ├── auth.ts                  # JWT & API Key validation
-│       │   ├── cors.ts                  # CORS pre-flight & headers
-│       │   ├── rateLimiter.ts           # DynamoDB atomic token bucket
-│       │   └── chaos.ts                 # Latency and fault injection
-│       └── engine/
-│           ├── templateParser.ts        # Dynamic Faker & tag replacer
-│           └── routeMatcher.ts          # Wildcard and param path resolver
-└── portal/                              # React + Vite Developer Web Portal
-    ├── package.json
-    ├── vite.config.ts
-    ├── tailwind.config.js
-    ├── index.html
-    └── src/
-        ├── App.tsx
-        ├── main.tsx
-        ├── components/
-        │   ├── Header.tsx
-        │   ├── RouteModal.tsx
-        │   ├── CodeConnectModal.tsx
-        │   └── QuotaRequestModal.tsx
-        └── views/
-            ├── AuthView.tsx
-            ├── MockStudioView.tsx
-            ├── LiveInspectorView.tsx
-            └── AdminConsoleView.tsx
+pseudoend/
+â”œâ”€â”€ PRD-1-Architecture-and-Infrastructure.md
+â”œâ”€â”€ PRD-2-Core-Engine-Middleware-Security.md
+â”œâ”€â”€ PRD-3-Portal-Admin-Console-and-Integration.md
+â”œâ”€â”€ PRD-4-AI-Prompt-Pack-Runbook-and-Zero-Cost-Deployment.md
+â”œâ”€â”€ pseudoend-bootstrap.sh                 # 1-Click Master Deployment Script
+â”œâ”€â”€ teardown.sh                          # 1-Click Master Stack Destruction Script
+â”œâ”€â”€ infrastructure/                      # Terraform Cloud Infrastructure
+â”‚   â”œâ”€â”€ main.tf
+â”‚   â”œâ”€â”€ variables.tf
+â”‚   â”œâ”€â”€ outputs.tf
+â”‚   â”œâ”€â”€ dynamodb.tf
+â”‚   â”œâ”€â”€ apigateway.tf
+â”‚   â”œâ”€â”€ lambda.tf
+â”‚   â””â”€â”€ s3_cloudfront.tf
+â”œâ”€â”€ backend/                             # Serverless AWS Lambda Source Code
+â”‚   â”œâ”€â”€ package.json
+â”‚   â”œâ”€â”€ tsconfig.json
+â”‚   â””â”€â”€ src/
+â”‚       â”œâ”€â”€ types/index.ts               # Shared TypeScript schemas & interfaces
+â”‚       â”œâ”€â”€ handlers/
+â”‚       â”‚   â”œâ”€â”€ mockEngine.ts            # Public Mock API Router & Executor
+â”‚       â”‚   â””â”€â”€ management.ts            # Auth, Route CRUD, Admin operations
+â”‚       â”œâ”€â”€ middleware/
+â”‚       â”‚   â”œâ”€â”€ auth.ts                  # JWT & API Key validation
+â”‚       â”‚   â”œâ”€â”€ cors.ts                  # CORS pre-flight & headers
+â”‚       â”‚   â”œâ”€â”€ rateLimiter.ts           # DynamoDB atomic token bucket
+â”‚       â”‚   â””â”€â”€ chaos.ts                 # Latency and fault injection
+â”‚       â””â”€â”€ engine/
+â”‚           â”œâ”€â”€ templateParser.ts        # Dynamic Faker & tag replacer
+â”‚           â””â”€â”€ routeMatcher.ts          # Wildcard and param path resolver
+â””â”€â”€ portal/                              # React + Vite Developer Web Portal
+    â”œâ”€â”€ package.json
+    â”œâ”€â”€ vite.config.ts
+    â”œâ”€â”€ tailwind.config.js
+    â”œâ”€â”€ index.html
+    â””â”€â”€ src/
+        â”œâ”€â”€ App.tsx
+        â”œâ”€â”€ main.tsx
+        â”œâ”€â”€ components/
+        â”‚   â”œâ”€â”€ Header.tsx
+        â”‚   â”œâ”€â”€ RouteModal.tsx
+        â”‚   â”œâ”€â”€ CodeConnectModal.tsx
+        â”‚   â””â”€â”€ QuotaRequestModal.tsx
+        â””â”€â”€ views/
+            â”œâ”€â”€ AuthView.tsx
+            â”œâ”€â”€ MockStudioView.tsx
+            â”œâ”€â”€ LiveInspectorView.tsx
+            â””â”€â”€ AdminConsoleView.tsx
 ```
 
 ---
 
 ## 3. The AI Prompt Engineering Pack
 
-To instruct an AI model (such as Gemini 1.5 Pro, Claude 3.5 Sonnet, or GPT-4o) to generate 100% bug-free, production-grade code for `sudoend`, feed each prompt sequentially in order.
+To instruct an AI model (such as Gemini 1.5 Pro, Claude 3.5 Sonnet, or GPT-4o) to generate 100% bug-free, production-grade code for `pseudoend`, feed each prompt sequentially in order.
 
 ---
 
@@ -117,7 +117,7 @@ To instruct an AI model (such as Gemini 1.5 Pro, Claude 3.5 Sonnet, or GPT-4o) t
 ### SYSTEM ROLE: Senior Principal Architect (TypeScript / AWS Serverless)
 
 ### TASK:
-Generate the shared type definitions and project configuration for "sudoend".
+Generate the shared type definitions and project configuration for "pseudoend".
 
 ### REQUIREMENTS:
 Create `backend/src/types/index.ts` defining:
@@ -149,16 +149,16 @@ Also generate `backend/package.json` and `backend/tsconfig.json` optimized for N
 ### SYSTEM ROLE: Staff Backend Systems Engineer
 
 ### TASK:
-Generate the high-throughput, zero-cost AWS Lambda Mock Engine handler for "sudoend".
+Generate the high-throughput, zero-cost AWS Lambda Mock Engine handler for "pseudoend".
 
 ### CONTEXT:
 Refer to `PRD-2-Core-Engine-Middleware-Security.md`. The Lambda function `mockEngine.ts` handles all incoming `/mock/{projectId}/{proxy+}` requests.
 
 ### REQUIREMENTS:
-1. Extract API key from header `x-sudoend-key` or query param `?key=`.
+1. Extract API key from header `x-pseudoend-key` or query param `?key=`.
 2. Middleware Chain:
    - `cors.ts`: Intercept OPTIONS, return 204 with full CORS headers.
-   - `auth.ts`: Verify API Key hash against DynamoDB table `sudoend-main`. Verify user is not banned.
+   - `auth.ts`: Verify API Key hash against DynamoDB table `pseudoend-main`. Verify user is not banned.
    - `rateLimiter.ts`: Use DynamoDB `UpdateItem` with `ADD requestCount 1` on key `BUCKET#<apiKey>#<date>`. Check against daily quota. If exceeded, return 429 with `{ error: "Daily credit limit exhausted. Request upgrade in dashboard." }`.
    - `chaos.ts`: If `failureRatePercent > 0`, roll dice `Math.random() * 100`. If hit, return HTTP 500. If `latencyMs > 0`, delay via `await new Promise(r => setTimeout(r, latencyMs))`.
 3. Route Matching (`routeMatcher.ts`):
@@ -209,7 +209,7 @@ Strictly use AWS SDK v3 `@aws-sdk/lib-dynamodb` with DynamoDBDocumentClient.
 ### SYSTEM ROLE: Lead Frontend Engineer & UX Designer
 
 ### TASK:
-Generate the entire frontend web portal for "sudoend" using React 18, Vite, and Tailwind CSS.
+Generate the entire frontend web portal for "pseudoend" using React 18, Vite, and Tailwind CSS.
 
 ### VIEWS REQUIRED:
 1. `AuthView.tsx`: Modern split-screen authentication (Register / Login). Shows a banner emphasizing "100% Free Forever - Zero Credit Card Required".
@@ -246,39 +246,39 @@ Create a full Vitest / Jest unit and integration test suite in `backend/tests/` 
 
 ---
 
-## 4. One-Click Bootstrap Engine (`sudoend-bootstrap.sh`)
+## 4. One-Click Bootstrap Engine (`pseudoend-bootstrap.sh`)
 
 Save this executable script in the root directory. It coordinates the entire deployment automatically:
 
 ```bash
 #!/usr/bin/env bash
 # ==============================================================================
-# sudoend — Master Zero-Cost 1-Click Bootstrap Engine
+# pseudoend â€” Master Zero-Cost 1-Click Bootstrap Engine
 # ==============================================================================
 set -euo pipefail
 
 echo "=========================================================="
-echo "  🚀 Starting sudoend Deployment Engine..."
+echo "  ðŸš€ Starting pseudoend Deployment Engine..."
 echo "  Target: AWS Free Tier ($0.00 Idle Cost Architecture)"
 echo "=========================================================="
 
 # 1. Pre-flight sanity checks
-command -v aws >/dev/null 2>&1 || { echo "❌ AWS CLI is not installed. Aborting."; exit 1; }
-command -v terraform >/dev/null 2>&1 || { echo "❌ Terraform is not installed. Aborting."; exit 1; }
-command -v node >/dev/null 2>&1 || { echo "❌ Node.js is not installed. Aborting."; exit 1; }
-command -v npm >/dev/null 2>&1 || { echo "❌ npm is not installed. Aborting."; exit 1; }
+command -v aws >/dev/null 2>&1 || { echo "âŒ AWS CLI is not installed. Aborting."; exit 1; }
+command -v terraform >/dev/null 2>&1 || { echo "âŒ Terraform is not installed. Aborting."; exit 1; }
+command -v node >/dev/null 2>&1 || { echo "âŒ Node.js is not installed. Aborting."; exit 1; }
+command -v npm >/dev/null 2>&1 || { echo "âŒ npm is not installed. Aborting."; exit 1; }
 
-echo "✅ Pre-flight checks passed: AWS CLI, Terraform, Node.js, and npm are ready."
+echo "âœ… Pre-flight checks passed: AWS CLI, Terraform, Node.js, and npm are ready."
 
 # 2. Build Backend Lambda packages
-echo "📦 Building Backend Lambda Functions..."
+echo "ðŸ“¦ Building Backend Lambda Functions..."
 cd backend
 npm install
 npm run build
 cd ..
 
 # 3. Apply Terraform Infrastructure
-echo "☁️ Provisioning AWS Serverless Infrastructure with Terraform..."
+echo "â˜ï¸ Provisioning AWS Serverless Infrastructure with Terraform..."
 cd infrastructure
 terraform init
 terraform apply -auto-approve
@@ -289,15 +289,15 @@ S3_BUCKET=$(terraform output -raw portal_s3_bucket_name)
 cd ..
 
 # 4. Build Frontend Portal with API URL injected
-echo "💻 Building Frontend Web Portal..."
+echo "ðŸ’» Building Frontend Web Portal..."
 cd portal
 npm install
 VITE_API_URL="$API_URL" npm run build
 
 # 5. Sync Web Portal to S3 & Invalidate CloudFront
-echo "🚀 Uploading Portal to S3 and Edge CDN..."
+echo "ðŸš€ Uploading Portal to S3 and Edge CDN..."
 aws s3 sync dist/ "s3://${S3_BUCKET}" --delete
-echo "🧹 Triggering CDN cache refresh..."
+echo "ðŸ§¹ Triggering CDN cache refresh..."
 CF_DIST_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Origins.Items[?DomainName=='${S3_BUCKET}.s3.amazonaws.com']].Id | [0]" --output text)
 if [ "$CF_DIST_ID" != "None" ] && [ -n "$CF_DIST_ID" ]; then
   aws cloudfront create-invalidation --distribution-id "$CF_DIST_ID" --paths "/*" >/dev/null
@@ -305,11 +305,11 @@ fi
 cd ..
 
 echo "=========================================================="
-echo "  🎉 SUCCESS! sudoend is live worldwide!"
+echo "  ðŸŽ‰ SUCCESS! pseudoend is live worldwide!"
 echo "=========================================================="
-echo "  🌐 Developer Web Portal:  $CLOUDFRONT_URL"
-echo "  ⚡ Public Mock API Base:   $API_URL"
-echo "  💰 Current AWS Idle Cost: \$0.00 / month"
+echo "  ðŸŒ Developer Web Portal:  $CLOUDFRONT_URL"
+echo "  âš¡ Public Mock API Base:   $API_URL"
+echo "  ðŸ’° Current AWS Idle Cost: \$0.00 / month"
 echo "=========================================================="
 ```
 
@@ -322,11 +322,11 @@ If you are running on a temporary or student AWS account and wish to wipe everyt
 ```bash
 #!/usr/bin/env bash
 # ==============================================================================
-# sudoend — Emergency 1-Click Stack Teardown & Obliteration Script
+# pseudoend â€” Emergency 1-Click Stack Teardown & Obliteration Script
 # ==============================================================================
 set -euo pipefail
 
-echo "⚠️  WARNING: This will permanently destroy all sudoend cloud resources,"
+echo "âš ï¸  WARNING: This will permanently destroy all pseudoend cloud resources,"
 echo "   including DynamoDB mock data, API Gateways, Lambdas, and S3 assets."
 read -p "Are you sure you want to proceed? (y/N): " confirm
 
@@ -335,18 +335,18 @@ if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
   exit 0
 fi
 
-echo "🗑️ Emptying S3 Portal Bucket before deletion..."
+echo "ðŸ—‘ï¸ Emptying S3 Portal Bucket before deletion..."
 cd infrastructure
 S3_BUCKET=$(terraform output -raw portal_s3_bucket_name 2>/dev/null || echo "")
 if [ -n "$S3_BUCKET" ]; then
   aws s3 rm "s3://${S3_BUCKET}" --recursive || true
 fi
 
-echo "💥 Running Terraform Destroy..."
+echo "ðŸ’¥ Running Terraform Destroy..."
 terraform destroy -auto-approve
 
-echo "✅ All sudoend cloud infrastructure has been cleanly and permanently removed."
-echo "Your AWS account is 100% free of sudoend resources."
+echo "âœ… All pseudoend cloud infrastructure has been cleanly and permanently removed."
+echo "Your AWS account is 100% free of pseudoend resources."
 ```
 
 ---
@@ -356,11 +356,11 @@ echo "Your AWS account is 100% free of sudoend resources."
 To provide 100% confidence to the client that no unexpected bills will occur:
 
 1. **Verify No VPC or NAT Gateways Exist:**  
-   NAT Gateways cost ~\$32/month even when processing zero bytes. `sudoend` uses direct public serverless endpoints—no VPC or NAT Gateway is ever created.
+   NAT Gateways cost ~\$32/month even when processing zero bytes. `pseudoend` uses direct public serverless endpointsâ€”no VPC or NAT Gateway is ever created.
 2. **Verify DynamoDB Capacity Mode:**  
    Ensure billing mode is set to `PAY_PER_REQUEST` (On-Demand). Check via:
    ```bash
-   aws dynamodb describe-table --table-name sudoend-main --query "Table.BillingModeSummary.BillingMode"
+   aws dynamodb describe-table --table-name pseudoend-main --query "Table.BillingModeSummary.BillingMode"
    # Output must be: "PAY_PER_REQUEST"
    ```
 3. **Verify Lambda Memory & Timeouts:**  
@@ -368,7 +368,7 @@ To provide 100% confidence to the client that no unexpected bills will occur:
 4. **Set an AWS Billing Alarm via AWS CLI:**  
    ```bash
    aws cloudwatch put-metric-alarm \
-     --alarm-name "sudoend-Zero-Cost-Guardrail" \
+     --alarm-name "pseudoend-Zero-Cost-Guardrail" \
      --metric-name EstimatedCharges \
      --namespace AWS/Billing \
      --statistic Maximum \
@@ -385,7 +385,7 @@ To provide 100% confidence to the client that no unexpected bills will occur:
 
 | Step | Verification Task | Expected Result | Checked? |
 | :---: | :--- | :--- | :---: |
-| 1 | Run `./sudoend-bootstrap.sh` | Clean execution ending with Live CloudFront & API Gateway URLs | [ ] |
+| 1 | Run `./pseudoend-bootstrap.sh` | Clean execution ending with Live CloudFront & API Gateway URLs | [ ] |
 | 2 | Open Developer Portal URL in Chrome/Firefox | Displays dark-themed login & registration page | [ ] |
 | 3 | Create an account `dev@test.local` | Lands in dashboard with pre-loaded demo project & API key | [ ] |
 | 4 | Click "Connect to Frontend" on demo route | Generates valid React / Vue / Swift / Flutter code snippets | [ ] |

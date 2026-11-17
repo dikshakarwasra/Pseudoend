@@ -75,7 +75,7 @@ export const QuotaRequestModal: React.FC<QuotaRequestModalProps> = ({
             <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 text-xs text-amber-300 flex items-start space-x-2.5">
               <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <div>
-                <strong>Zero-Paid Community Model:</strong> sudoend does not charge credit cards. Higher limits are granted manually by administrators to prevent cloud resource abuse.
+                <strong>Zero-Paid Community Model:</strong> Pseudoend does not charge credit cards. Higher limits are granted manually by administrators to prevent cloud resource abuse.
               </div>
             </div>
 

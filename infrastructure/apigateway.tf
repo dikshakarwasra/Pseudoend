@@ -1,12 +1,12 @@
 # API Gateway v2 (HTTP API)
 resource "aws_apigatewayv2_api" "http_api" {
-  name          = "sudoend-http-api-${random_string.suffix.result}"
+  name          = "${var.project_name}-http-api-${random_string.suffix.result}"
   protocol_type = "HTTP"
 
   cors_configuration {
     allow_origins = ["*"]
     allow_methods = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]
-    allow_headers = ["Authorization", "Content-Type", "x-sudoend-key", "x-requested-with", "x-api-key"]
+    allow_headers = ["Authorization", "Content-Type", "x-pseudoend-key", "x-sudoend-key", "x-requested-with", "x-api-key"]
     max_age       = 86400
   }
 }

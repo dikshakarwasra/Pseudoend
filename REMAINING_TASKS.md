@@ -1,4 +1,4 @@
-# sudoend — Remaining Production Tasks & Action Checklist
+# Pseudoend — Remaining Production Tasks & Action Checklist
 
 Use this checklist to track remaining operational tasks, custom domain setup, HTTPS/SSL certificates, theming, and cloud verification.
 
@@ -23,7 +23,7 @@ Use this checklist to track remaining operational tasks, custom domain setup, HT
 
 ### 2. Branding, Themes & UX Customization
 - [ ] Implement a Light / Dark mode theme toggle button in `portal/src/components/Header.tsx` (using Tailwind `dark:` classes and `localStorage`)
-- [ ] Replace the placeholder SVG favicon in `portal/index.html` with your custom `sudoend` logo icon
+- [ ] Replace the placeholder SVG favicon in `portal/index.html` with your custom `Pseudoend` logo icon
 - [ ] Add OpenGraph and Twitter card `<meta>` tags in `portal/index.html` for rich link previews when sharing on Discord, Twitter/X, and LinkedIn
 - [ ] Customize the initial mock routes seeded during user registration in `backend/src/handlers/management.ts` (e.g., adding sample ecommerce or auth routes)
 
@@ -31,7 +31,7 @@ Use this checklist to track remaining operational tasks, custom domain setup, HT
 
 ### 3. Cloud Deployment & Initial Production Bootstrap
 - [x] Ensure local toolchain (Node.js 20, npm, AWS CLI, and Terraform) can execute outside sandbox restrictions
-- [x] Run `aws configure` with your `sudoend-admin` IAM credentials
+- [x] Run `aws configure` with your `pseudoend-admin` IAM credentials
 - [x] Provisioned via Terraform (`terraform apply` succeeded)
 - [x] Live Deployment Endpoints:
   - **API Gateway URL**: `https://hvr5wkatpa.execute-api.us-east-1.amazonaws.com`
@@ -57,7 +57,7 @@ Use this checklist to track remaining operational tasks, custom domain setup, HT
 - [ ] Create an AWS CloudWatch billing alarm configured to send an urgent email if estimated charges reach $0.01:
   ```bash
   aws cloudwatch put-metric-alarm \
-    --alarm-name "sudoend-Zero-Dollar-Guardrail" \
+    --alarm-name "pseudoend-Zero-Dollar-Guardrail" \
     --metric-name EstimatedCharges \
     --namespace AWS/Billing \
     --statistic Maximum \
@@ -72,7 +72,7 @@ Use this checklist to track remaining operational tasks, custom domain setup, HT
 ---
 
 ### 5. Production Operations & CI/CD
-- [ ] Create a private or public GitHub repository for `sudoend` and push the project code
+- [ ] Create a private or public GitHub repository for `Pseudoend` and push the project code
 - [ ] Set up a `.github/workflows/deploy.yml` GitHub Actions pipeline for automated testing (`vitest`) and zero-downtime static builds
 - [ ] (Optional) Connect a free transactional email service (such as Resend Free Tier or AWS SES) to send automated welcome and password-reset emails
 - [ ] Test connecting a real frontend app (React, Vue, iOS, or Flutter) using the generated code snippets from the portal

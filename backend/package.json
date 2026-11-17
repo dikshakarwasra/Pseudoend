@@ -1,5 +1,5 @@
 {
-  "name": "sudoend-backend",
+  "name": "pseudoend-backend",
   "version": "1.0.0",
   "description": "High-throughput, zero-idle-cost serverless mock backend engine and management API",
   "main": "dist/handlers/mockEngine.js",
@@ -17,7 +17,7 @@
     "ephemeral-backend",
     "dynamodb"
   ],
-  "author": "sudoend core team",
+  "author": "Pseudoend core team",
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.600.0",

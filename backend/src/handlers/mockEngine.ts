@@ -9,7 +9,7 @@ import { resolveRoute, normalizePath } from '../engine/routeMatcher.js';
 import { parseTemplate } from '../engine/templateParser.js';
 
 /**
- * Main Lambda Handler for the sudoend Public Mocking Engine.
+ * Main Lambda Handler for the Pseudoend Public Mocking Engine.
  * Path pattern: ANY /mock/{projectId}/{proxy+}
  */
 export async function handler(event: APIGatewayEventV2): Promise<APIGatewayResponse> {
@@ -130,7 +130,7 @@ export async function handler(event: APIGatewayEventV2): Promise<APIGatewayRespo
         body: JSON.stringify({
           error: 'Not Found',
           message: `No mock route configured for [${method}] "${normalizedSubPath}" in project "${projectId}".`,
-          suggestion: 'Open your sudoend Developer Portal to add this endpoint or test with /mock/' + projectId + '/echo'
+          suggestion: 'Open your Pseudoend Developer Portal to add this endpoint or test with /mock/' + projectId + '/echo'
         })
       });
     }

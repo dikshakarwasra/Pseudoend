@@ -4,13 +4,20 @@ Use this checklist to track remaining operational tasks, custom domain setup, HT
 
 ---
 
-### 1. Domain Registration & Free SSL / HTTPS Setup
-- [ ] Purchase a custom domain name (e.g., via Namecheap, Cloudflare Registrar, or AWS Route 53)
-- [ ] Create an AWS Route 53 Hosted Zone for your custom domain
-- [ ] Request a free SSL/TLS certificate in AWS Certificate Manager (ACM) in the `us-east-1` region (covers `yourdomain.com` and `*.yourdomain.com`)
-- [ ] Add DNS CNAME validation records in your domain registrar to verify SSL certificate ownership
-- [ ] Attach the validated ACM certificate and custom domain (CNAME) to the CloudFront distribution in `infrastructure/s3_cloudfront.tf`
-- [ ] Create an API Gateway Custom Domain Name in AWS (e.g., `api.yourdomain.com`) and map it to the `$default` stage
+### 1. Zero-Cost Production Domains & Hosting Strategy
+- [ ] **Client-Side Portal**:
+  - **Option A (Vercel)**:
+    - [x] Added `portal/vercel.json` for SPA routing & edge caching
+    - [x] Added `portal/.env.production` pointing to live AWS API Gateway
+    - [ ] Import repo into Vercel (Root Directory: `portal`) to deploy at `https://<your-project>.vercel.app`
+  - **Option B (AWS CloudFront)**:
+    - [x] CloudFront CDN & S3 provisioned at: `https://d1qp1cubuc7v6p.cloudfront.net` (Bucket: `sudoend-portal-3g8ng5`)
+    - [ ] Sync built static portal files: `aws s3 sync portal/dist/ s3://sudoend-portal-3g8ng5 --delete`
+- [x] **Backend & Mock Engine**: Deployed on **AWS Serverless Free Tier**
+  - [x] API Gateway Live Endpoint: `https://hvr5wkatpa.execute-api.us-east-1.amazonaws.com` (Free, built-in Amazon SSL)
+  - [x] DynamoDB table: `sudoend-main` (PAY_PER_REQUEST on-demand mode, TTL enabled)
+  - [x] Lambda functions: `sudoend-mock-engine-fn-3g8ng5` & `sudoend-management-fn-3g8ng5` (Node.js 20, 256MB)
+- [ ] *(Optional Future Step)* Custom Domain Name (e.g., `pseudoend.com` via Cloudflare/Route 53 if moving off `*.vercel.app` and `*.amazonaws.com`)
 
 ---
 
@@ -23,10 +30,14 @@ Use this checklist to track remaining operational tasks, custom domain setup, HT
 ---
 
 ### 3. Cloud Deployment & Initial Production Bootstrap
-- [ ] Ensure local toolchain (Node.js 20, npm, AWS CLI, and Terraform) can execute outside sandbox restrictions
-- [ ] Run `aws configure` with your `sudoend-admin` IAM credentials
-- [ ] Execute the master deployment script: `./sudoend-bootstrap.sh`
-- [ ] Note down the generated API Gateway URL and CloudFront CDN endpoint from the terminal output
+- [x] Ensure local toolchain (Node.js 20, npm, AWS CLI, and Terraform) can execute outside sandbox restrictions
+- [x] Run `aws configure` with your `sudoend-admin` IAM credentials
+- [x] Provisioned via Terraform (`terraform apply` succeeded)
+- [x] Live Deployment Endpoints:
+  - **API Gateway URL**: `https://hvr5wkatpa.execute-api.us-east-1.amazonaws.com`
+  - **CloudFront CDN Endpoint**: `https://d1qp1cubuc7v6p.cloudfront.net`
+  - **S3 Bucket**: `sudoend-portal-3g8ng5`
+  - **DynamoDB Table**: `sudoend-main`
 - [ ] Register the very first account on your live portal (`admin@yourdomain.com`)
 - [ ] Run the AWS CLI command to grant that account `role: "admin"` in the DynamoDB table:
   ```bash

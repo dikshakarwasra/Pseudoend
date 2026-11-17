@@ -69,7 +69,7 @@ data "archive_file" "mock_engine_zip" {
   output_path = "${path.module}/mockEngine.zip"
 
   source {
-    content  = fileexists("${path.module}/../backend/dist/handlers/mockEngine.js") ? file("${path.module}/../backend/dist/handlers/mockEngine.js") : "exports.handler = async () => ({ statusCode: 200, body: 'sudoend mock engine initializing...' });"
+    content  = fileexists("${path.module}/../backend/dist/mockEngine.js") ? file("${path.module}/../backend/dist/mockEngine.js") : (fileexists("${path.module}/../backend/dist/handlers/mockEngine.js") ? file("${path.module}/../backend/dist/handlers/mockEngine.js") : "exports.handler = async () => ({ statusCode: 200, body: 'sudoend mock engine initializing...' });")
     filename = "index.js"
   }
 }
@@ -104,7 +104,7 @@ data "archive_file" "management_zip" {
   output_path = "${path.module}/management.zip"
 
   source {
-    content  = fileexists("${path.module}/../backend/dist/handlers/management.js") ? file("${path.module}/../backend/dist/handlers/management.js") : "exports.handler = async () => ({ statusCode: 200, body: 'sudoend management API initializing...' });"
+    content  = fileexists("${path.module}/../backend/dist/management.js") ? file("${path.module}/../backend/dist/management.js") : (fileexists("${path.module}/../backend/dist/handlers/management.js") ? file("${path.module}/../backend/dist/handlers/management.js") : "exports.handler = async () => ({ statusCode: 200, body: 'sudoend management API initializing...' });")
     filename = "index.js"
   }
 }

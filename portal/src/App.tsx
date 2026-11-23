@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { User, Project, MockRoute } from './types.js';
 import { Header } from './components/Header.js';
 import { RouteModal } from './components/RouteModal.js';
@@ -176,7 +177,12 @@ export function App() {
   };
 
   if (!token || !user) {
-    return <AuthView onAuthSuccess={handleAuthSuccess} apiBaseUrl={API_BASE_URL} />;
+    return (
+      <>
+        <AuthView onAuthSuccess={handleAuthSuccess} apiBaseUrl={API_BASE_URL} />
+        <SpeedInsights />
+      </>
+    );
   }
 
   return (
@@ -244,6 +250,8 @@ export function App() {
         onSubmit={handleSubmitQuotaRequest}
         currentTier={user.tier}
       />
+      
+      <SpeedInsights />
     </div>
   );
 }

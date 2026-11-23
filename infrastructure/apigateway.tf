@@ -39,6 +39,13 @@ resource "aws_apigatewayv2_route" "mock_route" {
   target    = "integrations/${aws_apigatewayv2_integration.mock_engine.id}"
 }
 
+# Route: /mock -> Mock Engine Lambda
+resource "aws_apigatewayv2_route" "mock_root_route" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "ANY /mock"
+  target    = "integrations/${aws_apigatewayv2_integration.mock_engine.id}"
+}
+
 # Integration: Management Lambda
 resource "aws_apigatewayv2_integration" "management" {
   api_id                 = aws_apigatewayv2_api.http_api.id
@@ -52,6 +59,13 @@ resource "aws_apigatewayv2_integration" "management" {
 resource "aws_apigatewayv2_route" "management_route" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "ANY /api/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.management.id}"
+}
+
+# Route: /api -> Management Lambda
+resource "aws_apigatewayv2_route" "management_root_route" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "ANY /api"
   target    = "integrations/${aws_apigatewayv2_integration.management.id}"
 }
 

@@ -28,6 +28,10 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 
+# Deployment State & Vercel
+.pseudoend-deploy-state.json
+.vercel/
+
 # Editor & OS files
 .vscode/
 .idea/

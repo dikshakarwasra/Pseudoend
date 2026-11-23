@@ -28,14 +28,24 @@ export const AuthView: React.FC<AuthViewProps> = ({ onAuthSuccess, apiBaseUrl })
         body: JSON.stringify({ email: email.trim(), password })
       });
 
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = { message: `Server response error (HTTP ${res.status} ${res.statusText})` };
+      }
+
       if (!res.ok) {
-        throw new Error(data.message || data.error || 'Authentication failed');
+        throw new Error(data.message || data.error || `Authentication failed (HTTP ${res.status})`);
       }
 
       onAuthSuccess(data.token, data.user, data.initialProject);
     } catch (err: any) {
-      setError(err.message || 'Network error connecting to API Gateway.');
+      if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+        setError(`Failed to connect to API Gateway at ${apiBaseUrl}. Please verify network connection or CORS configuration.`);
+      } else {
+        setError(err.message || 'Network error connecting to API Gateway.');
+      }
     } finally {
       setLoading(false);
     }

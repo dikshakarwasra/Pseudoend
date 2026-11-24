@@ -76,7 +76,7 @@ if (Test-Path $stateFile) {
 $commitMsg = (git log -1 --pretty=format:"%s" 2>$null)
 $shortLocal = $localHash.Substring(0, [System.Math]::Min(7, $localHash.Length))
 
-if (-not $Force -and $lastDeployedCommit -and ($lastDeployedCommit -eq $localHash)) {
+if (-not $Force -and $lastDeployedCommit -and ($lastDeployedCommit -eq $localHash -or $localHash.StartsWith($lastDeployedCommit) -or $lastDeployedCommit.StartsWith($localHash))) {
     Write-Host ""
     Write-Host "[OK] Everything is up to date!" -ForegroundColor Green
     Write-Host "   Latest Commit: $shortLocal - `"$commitMsg`"" -ForegroundColor White

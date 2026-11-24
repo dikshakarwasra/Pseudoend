@@ -50,3 +50,104 @@ export interface AdminStats {
   freeTierStatus: string;
 }
 
+export type EnvironmentType = 'sandbox' | 'development' | 'staging' | 'live';
+
+export interface EnvironmentConfig {
+  name: EnvironmentType;
+  latencyMs: number;
+  failureRatePercent: number;
+  isEnabled: boolean;
+  recordCount?: number;
+  updatedAt: string;
+}
+
+export interface EntityField {
+  name: string;
+  type: string;
+  required?: boolean;
+  isPrimary?: boolean;
+}
+
+export interface EntityNode {
+  id: string;
+  name: string;
+  resource: string;
+  fields: EntityField[];
+  recordCount: number;
+  color?: string;
+  x?: number;
+  y?: number;
+}
+
+export interface RelationshipEdge {
+  id: string;
+  source: string;
+  target: string;
+  sourceField: string;
+  targetField: string;
+  type: '1:1' | '1:N' | 'N:M';
+  label: string;
+}
+
+export interface SchemaRelationshipsRecord {
+  projectId: string;
+  nodes: EntityNode[];
+  edges: RelationshipEdge[];
+  updatedAt: string;
+}
+
+export interface DatabaseSnapshotRecord {
+  id: string;
+  projectId: string;
+  environment: EnvironmentType;
+  timestamp: string;
+  description: string;
+  trigger: 'auto' | 'manual' | 'pre-restore';
+  recordCount: number;
+  data: Record<string, any[]>;
+  createdAt: string;
+}
+
+export interface RequestLogRecord {
+  id: string;
+  projectId: string;
+  environment: EnvironmentType;
+  timestamp: string;
+  method: string;
+  endpoint: string;
+  status: number;
+  durationMs: number;
+  requestHeaders?: Record<string, string>;
+  requestBody?: any;
+  responseHeaders?: Record<string, string>;
+  responseBody?: any;
+  sourceIp?: string;
+}
+
+export interface TestResultItem {
+  routeId: string;
+  method: string;
+  path: string;
+  expectedStatus: number;
+  actualStatus: number;
+  passed: boolean;
+  durationMs: number;
+  error?: string;
+}
+
+export interface TestReportRecord {
+  id: string;
+  projectId: string;
+  environment: EnvironmentType;
+  timestamp: string;
+  totalTests: number;
+  passed: number;
+  failed: number;
+  skipped: number;
+  avgDurationMs: number;
+  minDurationMs: number;
+  maxDurationMs: number;
+  results: TestResultItem[];
+}
+
+

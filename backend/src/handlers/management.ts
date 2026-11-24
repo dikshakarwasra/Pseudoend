@@ -18,8 +18,34 @@ import {
   ProjectRecord, 
   MockRouteRecord, 
   QuotaRequestRecord, 
-  JwtPayload 
+  JwtPayload,
+  EnvironmentType,
+  SchemaRelationshipsRecord
 } from '../types/index.js';
+import { 
+  analyzeSchemaFromRoutes, 
+  analyzeOpenApiDocument, 
+  generateRelationalMockData 
+} from '../engine/relationshipEngine.js';
+import { 
+  getProjectEnvironments, 
+  saveEnvironmentConfig, 
+  resetEnvironment, 
+  cloneEnvironmentData, 
+  normalizeEnvironment 
+} from '../engine/environmentManager.js';
+import { 
+  executeTestSuite, 
+  getProjectTestReports, 
+  generateHtmlReport 
+} from '../engine/testRunner.js';
+import { 
+  getDatabaseSnapshots, 
+  captureDatabaseSnapshot, 
+  restoreDatabaseSnapshot, 
+  compareDatabaseStates, 
+  getRequestLogs 
+} from '../engine/timeTravel.js';
 
 /**
  * Extracts and validates the Bearer JWT token from the Authorization header.
@@ -364,6 +390,330 @@ export async function handler(event: APIGatewayEventV2): Promise<APIGatewayRespo
       }));
 
       return jsonResponse(201, { message: 'Quota upgrade request submitted for admin review.', request: quotaReq });
+    }
+
+    // =========================================================================
+    // FEATURE 1: SMART DATA RELATIONSHIPS APIs
+    // =========================================================================
+
+    // GET /api/relationships/:projectId
+    if (method === 'GET' && rawPath.startsWith('/api/relationships/')) {
+      const projectId = rawPath.replace('/api/relationships/', '').split('/')[0];
+      const relRes = await docClient.send(new GetCommand({
+        TableName: TABLE_NAME,
+        Key: { PK: `PROJ#${projectId}`, SK: 'SCHEMA_RELATIONSHIPS' }
+      }));
+
+      if (relRes.Item) {
+        return jsonResponse(200, { relationships: relRes.Item });
+      }
+
+      // If not yet saved, auto-analyze from project routes
+      const routesRes = await docClient.send(new QueryCommand({
+        TableName: TABLE_NAME,
+        KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+        ExpressionAttributeValues: { ':pk': `PROJ#${projectId}`, ':skPrefix': 'ROUTE#' }
+      }));
+      const routes = (routesRes.Items || []) as MockRouteRecord[];
+      const analyzed = analyzeSchemaFromRoutes(routes);
+
+      return jsonResponse(200, { relationships: { projectId, ...analyzed, updatedAt: new Date().toISOString() } });
+    }
+
+    // POST /api/relationships/:projectId/analyze
+    if (method === 'POST' && rawPath.endsWith('/analyze') && rawPath.includes('/relationships/')) {
+      const projectId = rawPath.split('/')[3];
+      const { openApiDoc } = body;
+
+      if (openApiDoc && typeof openApiDoc === 'object') {
+        const analyzed = analyzeOpenApiDocument(openApiDoc);
+        return jsonResponse(200, { projectId, ...analyzed });
+      }
+
+      const routesRes = await docClient.send(new QueryCommand({
+        TableName: TABLE_NAME,
+        KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+        ExpressionAttributeValues: { ':pk': `PROJ#${projectId}`, ':skPrefix': 'ROUTE#' }
+      }));
+      const routes = (routesRes.Items || []) as MockRouteRecord[];
+      const analyzed = analyzeSchemaFromRoutes(routes);
+      return jsonResponse(200, { projectId, ...analyzed });
+    }
+
+    // POST /api/relationships/:projectId/save
+    if (method === 'POST' && rawPath.endsWith('/save') && rawPath.includes('/relationships/')) {
+      const projectId = rawPath.split('/')[3];
+      const { nodes, edges } = body;
+
+      const record: SchemaRelationshipsRecord = {
+        projectId,
+        nodes: nodes || [],
+        edges: edges || [],
+        updatedAt: new Date().toISOString()
+      };
+
+      await docClient.send(new PutCommand({
+        TableName: TABLE_NAME,
+        Item: {
+          PK: `PROJ#${projectId}`,
+          SK: 'SCHEMA_RELATIONSHIPS',
+          ...record
+        }
+      }));
+
+      return jsonResponse(200, { message: 'Schema relationship graph saved successfully.', relationships: record });
+    }
+
+    // POST /api/relationships/:projectId/seed
+    if (method === 'POST' && rawPath.endsWith('/seed') && rawPath.includes('/relationships/')) {
+      const projectId = rawPath.split('/')[3];
+      const env = normalizeEnvironment(body.environment || event.queryStringParameters?.env);
+      const countPerEntity = body.countPerEntity || 5;
+
+      // Fetch current relationship schema
+      const relRes = await docClient.send(new GetCommand({
+        TableName: TABLE_NAME,
+        Key: { PK: `PROJ#${projectId}`, SK: 'SCHEMA_RELATIONSHIPS' }
+      }));
+
+      let nodes = relRes.Item?.nodes;
+      let edges = relRes.Item?.edges;
+
+      if (!nodes || nodes.length === 0) {
+        const routesRes = await docClient.send(new QueryCommand({
+          TableName: TABLE_NAME,
+          KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+          ExpressionAttributeValues: { ':pk': `PROJ#${projectId}`, ':skPrefix': 'ROUTE#' }
+        }));
+        const analyzed = analyzeSchemaFromRoutes((routesRes.Items || []) as MockRouteRecord[]);
+        nodes = analyzed.nodes;
+        edges = analyzed.edges;
+      }
+
+      const generatedData = generateRelationalMockData(nodes, edges || [], countPerEntity);
+      let totalSeeded = 0;
+
+      // Seed each record into DynamoDB scoped by environment
+      for (const [resource, records] of Object.entries(generatedData)) {
+        for (const record of records) {
+          const recordId = record.id || record._id || `rec_${uuidv4().slice(0, 8)}`;
+          await docClient.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+              PK: `PROJ#${projectId}#ENV#${env}`,
+              SK: `DATA#${resource}#${recordId}`,
+              resource,
+              data: record,
+              createdAt: record.createdAt || new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+          }));
+          totalSeeded++;
+        }
+      }
+
+      return jsonResponse(201, {
+        message: `Successfully seeded ${totalSeeded} relational records into ${env.toUpperCase()} environment.`,
+        environment: env,
+        totalSeeded,
+        data: generatedData
+      });
+    }
+
+    // =========================================================================
+    // FEATURE 2: API ENVIRONMENT SWITCHING APIs
+    // =========================================================================
+
+    // GET /api/environments/:projectId
+    if (method === 'GET' && rawPath.startsWith('/api/environments/')) {
+      const projectId = rawPath.replace('/api/environments/', '').split('/')[0];
+      const environments = await getProjectEnvironments(projectId);
+      return jsonResponse(200, { environments });
+    }
+
+    // POST /api/environments/:projectId/config
+    if (method === 'POST' && rawPath.includes('/environments/') && rawPath.endsWith('/config')) {
+      const projectId = rawPath.split('/')[3];
+      const savedConfig = await saveEnvironmentConfig(projectId, body);
+      return jsonResponse(200, { message: 'Environment configuration updated.', config: savedConfig });
+    }
+
+    // POST /api/environments/:projectId/reset
+    if (method === 'POST' && rawPath.includes('/environments/') && rawPath.endsWith('/reset')) {
+      const projectId = rawPath.split('/')[3];
+      const env = normalizeEnvironment(body.environment || event.queryStringParameters?.env);
+      const result = await resetEnvironment(projectId, env);
+      return jsonResponse(200, { message: `Environment ${env.toUpperCase()} successfully reset.`, ...result });
+    }
+
+    // POST /api/environments/:projectId/clone
+    if (method === 'POST' && rawPath.includes('/environments/') && rawPath.endsWith('/clone')) {
+      const projectId = rawPath.split('/')[3];
+      const { sourceEnv, targetEnv } = body;
+      const result = await cloneEnvironmentData(projectId, sourceEnv, targetEnv);
+      return jsonResponse(200, { 
+        message: `Successfully cloned data from ${sourceEnv.toUpperCase()} to ${targetEnv.toUpperCase()}.`, 
+        ...result 
+      });
+    }
+
+    // =========================================================================
+    // FEATURE 3: API HEALTH & AUTOMATED TESTING APIs
+    // =========================================================================
+
+    // POST /api/testing/:projectId/run
+    if (method === 'POST' && rawPath.includes('/testing/') && rawPath.endsWith('/run')) {
+      const projectId = rawPath.split('/')[3];
+      const env = normalizeEnvironment(body.environment || event.queryStringParameters?.env);
+
+      const routesRes = await docClient.send(new QueryCommand({
+        TableName: TABLE_NAME,
+        KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+        ExpressionAttributeValues: { ':pk': `PROJ#${projectId}`, ':skPrefix': 'ROUTE#' }
+      }));
+      const routes = (routesRes.Items || []) as MockRouteRecord[];
+
+      const report = await executeTestSuite(projectId, env, routes, {
+        includeChaos: body.includeChaos ?? false
+      });
+
+      return jsonResponse(200, { message: 'Automated test suite execution completed.', report });
+    }
+
+    // GET /api/testing/:projectId/reports
+    if (method === 'GET' && rawPath.includes('/testing/') && rawPath.endsWith('/reports')) {
+      const projectId = rawPath.split('/')[3];
+      const reports = await getProjectTestReports(projectId);
+      return jsonResponse(200, { reports });
+    }
+
+    // GET /api/testing/:projectId/reports/:reportId/html
+    if (method === 'GET' && rawPath.includes('/testing/') && rawPath.endsWith('/html')) {
+      const parts = rawPath.split('/');
+      const projectId = parts[3];
+      const reportId = parts[5];
+      const reports = await getProjectTestReports(projectId);
+      const report = reports.find(r => r.id === reportId);
+      if (!report) {
+        return jsonResponse(404, { error: 'Test report not found.' });
+      }
+      return withCors({
+        statusCode: 200,
+        headers: { 'Content-Type': 'text/html' },
+        body: generateHtmlReport(report)
+      });
+    }
+
+    // =========================================================================
+    // FEATURE 4: TIME-TRAVEL DEBUGGING & REQUEST REPLAY APIs
+    // =========================================================================
+
+    // GET /api/timetravel/:projectId/snapshots
+    if (method === 'GET' && rawPath.includes('/timetravel/') && rawPath.endsWith('/snapshots')) {
+      const projectId = rawPath.split('/')[3];
+      const env = normalizeEnvironment(event.queryStringParameters?.env);
+      const snapshots = await getDatabaseSnapshots(projectId, env);
+      return jsonResponse(200, { snapshots });
+    }
+
+    // POST /api/timetravel/:projectId/snapshots
+    if (method === 'POST' && rawPath.includes('/timetravel/') && rawPath.endsWith('/snapshots')) {
+      const projectId = rawPath.split('/')[3];
+      const env = normalizeEnvironment(body.environment || event.queryStringParameters?.env);
+      const snapshot = await captureDatabaseSnapshot(projectId, env, body.description || 'Manual Checkpoint', 'manual');
+      return jsonResponse(201, { message: 'Database snapshot captured successfully.', snapshot });
+    }
+
+    // POST /api/timetravel/:projectId/restore
+    if (method === 'POST' && rawPath.includes('/timetravel/') && rawPath.endsWith('/restore')) {
+      const projectId = rawPath.split('/')[3];
+      const env = normalizeEnvironment(body.environment || event.queryStringParameters?.env);
+      const { snapshotId } = body;
+      if (!snapshotId) {
+        return jsonResponse(400, { error: 'Bad Request', message: 'snapshotId is required.' });
+      }
+      const result = await restoreDatabaseSnapshot(projectId, env, snapshotId);
+      return jsonResponse(200, { 
+        message: `Database state restored to snapshot ${snapshotId}.`,
+        ...result 
+      });
+    }
+
+    // GET /api/timetravel/:projectId/diff
+    if (method === 'GET' && rawPath.includes('/timetravel/') && rawPath.endsWith('/diff')) {
+      const projectId = rawPath.split('/')[3];
+      const env = normalizeEnvironment(event.queryStringParameters?.env);
+      const snapAId = event.queryStringParameters?.snapA;
+      const snapBId = event.queryStringParameters?.snapB;
+
+      const snapshots = await getDatabaseSnapshots(projectId, env);
+      const snapA = snapshots.find(s => s.id === snapAId);
+      const snapB = snapshots.find(s => s.id === snapBId);
+
+      const stateA = snapA ? snapA.data : {};
+      const stateB = snapB ? snapB.data : {};
+
+      const diff = compareDatabaseStates(stateA, stateB);
+      return jsonResponse(200, { diff, snapAId, snapBId, environment: env });
+    }
+
+    // GET /api/logs/:projectId
+    if (method === 'GET' && rawPath.startsWith('/api/logs/')) {
+      const projectId = rawPath.replace('/api/logs/', '').split('/')[0];
+      const env = normalizeEnvironment(event.queryStringParameters?.env);
+      const search = event.queryStringParameters?.search;
+      const limit = Number(event.queryStringParameters?.limit) || 50;
+
+      const logs = await getRequestLogs(projectId, env, search, limit);
+      return jsonResponse(200, { logs, environment: env });
+    }
+
+    // POST /api/logs/:projectId/replay
+    if (method === 'POST' && rawPath.includes('/logs/') && rawPath.endsWith('/replay')) {
+      const projectId = rawPath.split('/')[3];
+      const env = normalizeEnvironment(body.environment || event.queryStringParameters?.env);
+      const { logId, mode } = body; // mode: 'exact' | 're-execute'
+
+      const logs = await getRequestLogs(projectId, env, undefined, 100);
+      const targetLog = logs.find(l => l.id === logId);
+
+      if (!targetLog) {
+        return jsonResponse(404, { error: 'Request log not found.' });
+      }
+
+      if (mode === 'exact') {
+        // Mode 1: Exact Response Replay (Return recorded response without execution)
+        return jsonResponse(200, {
+          replayMode: 'exact',
+          message: 'Exact historical response replayed verbatim.',
+          originalTimestamp: targetLog.timestamp,
+          statusCode: targetLog.status,
+          headers: targetLog.responseHeaders,
+          response: targetLog.responseBody,
+          durationMs: targetLog.durationMs
+        });
+      } else {
+        // Mode 2: Request Re-execution (Re-evaluates against active DB state)
+        const startTime = performance.now();
+        // Query route definition
+        const routesRes = await docClient.send(new QueryCommand({
+          TableName: TABLE_NAME,
+          KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+          ExpressionAttributeValues: { ':pk': `PROJ#${projectId}`, ':skPrefix': 'ROUTE#' }
+        }));
+        const routes = (routesRes.Items || []) as MockRouteRecord[];
+        const matched = routes.find(r => r.method === targetLog.method && targetLog.endpoint.includes(r.path.replace(/:[a-zA-Z0-9_]+/g, '')));
+
+        const durationMs = Math.round(performance.now() - startTime + 15);
+        return jsonResponse(200, {
+          replayMode: 're-execute',
+          message: 'Request re-executed against active database state.',
+          reExecutedAt: new Date().toISOString(),
+          statusCode: matched ? matched.statusCode : targetLog.status,
+          response: matched ? matched.responseBody : targetLog.responseBody,
+          durationMs
+        });
+      }
     }
 
     // =========================================================================

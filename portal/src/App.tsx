@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { User, Project, MockRoute } from './types.js';
-import { Header } from './components/Header.js';
+import { User, Project, MockRoute, EnvironmentType } from './types.js';
+import { Header, PortalTab } from './components/Header.js';
 import { RouteModal } from './components/RouteModal.js';
 import { CodeConnectModal } from './components/CodeConnectModal.js';
 import { QuotaRequestModal } from './components/QuotaRequestModal.js';
 import { AuthView } from './views/AuthView.js';
+import { DashboardView } from './views/DashboardView.js';
 import { MockStudioView } from './views/MockStudioView.js';
+import { DataRelationshipsView } from './views/DataRelationshipsView.js';
+import { EnvironmentsView } from './views/EnvironmentsView.js';
+import { ApiTestingView } from './views/ApiTestingView.js';
+import { TimeTravelView } from './views/TimeTravelView.js';
+import { ApiImportView } from './views/ApiImportView.js';
 import { LiveInspectorView } from './views/LiveInspectorView.js';
 import { AdminConsoleView } from './views/AdminConsoleView.js';
 
@@ -20,7 +26,8 @@ export function App() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [routes, setRoutes] = useState<MockRoute[]>([]);
-  const [activeTab, setActiveTab] = useState<'studio' | 'inspector' | 'admin'>('studio');
+  const [activeEnvironment, setActiveEnvironment] = useState<EnvironmentType>('sandbox');
+  const [activeTab, setActiveTab] = useState<PortalTab>('dashboard');
 
   // Modals state
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
@@ -186,12 +193,27 @@ export function App() {
         activeProject={activeProject}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        activeEnvironment={activeEnvironment}
+        setActiveEnvironment={setActiveEnvironment}
         onRequestQuota={() => setIsQuotaModalOpen(true)}
         onLogout={handleLogout}
         onDeleteAccount={handleDeleteAccount}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-6">
+        {activeTab === 'dashboard' && (
+          <DashboardView
+            user={user}
+            activeProject={activeProject}
+            routes={routes}
+            activeEnvironment={activeEnvironment}
+            apiBaseUrl={API_BASE_URL}
+            token={token}
+            onNavigate={(t) => setActiveTab(t)}
+            onOpenNewRoute={() => { setEditingRoute(null); setIsRouteModalOpen(true); }}
+          />
+        )}
+
         {activeTab === 'studio' && (
           <MockStudioView
             routes={routes}
@@ -202,6 +224,56 @@ export function App() {
             onDeleteRoute={handleDeleteRoute}
             onConnectCode={(r) => { setConnectRoute(r); setIsConnectModalOpen(true); }}
             onRefresh={() => activeProject && fetchRoutes(activeProject.id, token)}
+          />
+        )}
+
+        {activeTab === 'relationships' && (
+          <DataRelationshipsView
+            activeProject={activeProject}
+            apiBaseUrl={API_BASE_URL}
+            token={token}
+            activeEnvironment={activeEnvironment}
+          />
+        )}
+
+        {activeTab === 'environments' && (
+          <EnvironmentsView
+            activeProject={activeProject}
+            apiBaseUrl={API_BASE_URL}
+            token={token}
+            activeEnvironment={activeEnvironment}
+            setActiveEnvironment={setActiveEnvironment}
+          />
+        )}
+
+        {activeTab === 'testing' && (
+          <ApiTestingView
+            activeProject={activeProject}
+            apiBaseUrl={API_BASE_URL}
+            token={token}
+            activeEnvironment={activeEnvironment}
+          />
+        )}
+
+        {activeTab === 'timetravel' && (
+          <TimeTravelView
+            activeProject={activeProject}
+            apiBaseUrl={API_BASE_URL}
+            token={token}
+            activeEnvironment={activeEnvironment}
+          />
+        )}
+
+        {activeTab === 'import' && (
+          <ApiImportView
+            activeProject={activeProject}
+            apiBaseUrl={API_BASE_URL}
+            token={token}
+            activeEnvironment={activeEnvironment}
+            onImportComplete={() => {
+              if (activeProject) fetchRoutes(activeProject.id, token);
+              setActiveTab('studio');
+            }}
           />
         )}
 

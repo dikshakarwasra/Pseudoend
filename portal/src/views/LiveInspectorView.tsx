@@ -49,7 +49,7 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
 
     try {
       const headers: Record<string, string> = {
-        'x-pseudoend-key': activeProject.apiKey || activeProject.rawApiKeyPrefix || '',
+        'x-pseudoend-key': activeProject.apiKey || activeProject.apiKeyHash || activeProject.rawApiKeyPrefix || '',
         'Content-Type': 'application/json'
       };
 
@@ -155,9 +155,8 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
               <div
                 key={log.id}
                 onClick={() => setSelectedLog(log)}
-                className={`p-3.5 text-xs cursor-pointer transition-colors flex items-center justify-between ${
-                  selectedLog?.id === log.id ? 'bg-[#e8f2fc]/40' : 'hover:bg-black/[0.02]'
-                }`}
+                className={`p-3.5 text-xs cursor-pointer transition-colors flex items-center justify-between ${selectedLog?.id === log.id ? 'bg-[#e8f2fc]/40' : 'hover:bg-black/[0.02]'
+                  }`}
               >
                 <div className="flex items-center space-x-2.5">
                   <Badge statusCode={log.status} size="sm" />

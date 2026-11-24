@@ -211,7 +211,7 @@ function AppContent() {
   const currentMeta = TAB_TITLES[activeTab] || TAB_TITLES.dashboard;
 
   return (
-    <div className="min-h-screen bg-black text-[#f5f5f7] flex flex-col md:flex-row font-sans selection:bg-[#0071e3] selection:text-white">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] flex flex-col md:flex-row font-sans selection:bg-[#0071e3] selection:text-white">
       {/* Vertical Sidebar Navigation */}
       <Header
         user={user}
@@ -226,17 +226,17 @@ function AppContent() {
       />
 
       {/* Main Workspace Area */}
-      <div className="flex-1 min-w-0 flex flex-col min-h-screen bg-[#000000]">
-        {/* Subtle Workspace Header Bar */}
-        <header className="hidden md:flex items-center justify-between px-6 lg:px-8 h-14 border-b border-white/10 bg-[#121213]/60 backdrop-blur-xl sticky top-0 z-20">
+      <div className="flex-1 min-w-0 flex flex-col min-h-screen bg-[#f5f5f7]">
+        {/* Apple Style Clean Workspace Header Bar */}
+        <header className="hidden md:flex items-center justify-between px-6 lg:px-8 h-16 border-b border-[#d2d2d7]/60 bg-white/80 backdrop-blur-xl sticky top-0 z-20">
           <div>
-            <h1 className="text-sm font-semibold text-[#f5f5f7] tracking-tight">{currentMeta.title}</h1>
-            <p className="text-[11px] text-[#86868b]">{currentMeta.subtitle}</p>
+            <h1 className="text-base font-bold text-[#1d1d1f] tracking-tight">{currentMeta.title}</h1>
+            <p className="text-xs text-[#6e6e73]">{currentMeta.subtitle}</p>
           </div>
 
           <div className="flex items-center space-x-3 text-xs">
-            <span className="text-[#86868b] font-mono">
-              Project: <strong className="text-[#d2d2d7]">{activeProject?.name || 'Default Project'}</strong>
+            <span className="text-[#6e6e73] font-mono bg-[#f5f5f7] px-3.5 py-1.5 rounded-full border border-[#d2d2d7]/70">
+              Project: <strong className="text-[#1d1d1f] font-semibold">{activeProject?.name || 'Default Project'}</strong>
             </span>
           </div>
         </header>

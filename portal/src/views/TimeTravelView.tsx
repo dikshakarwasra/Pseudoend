@@ -195,16 +195,16 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-[#161617] p-5 rounded-3xl border border-white/10 shadow-apple-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-black/[0.05] shadow-apple-sm">
         <div>
           <div className="flex items-center space-x-2">
             <History className="w-5 h-5 text-[#bf5af2]" />
-            <h2 className="text-base font-semibold text-white tracking-tight">Time-Travel Debugging & Request Replay</h2>
-            <span className="text-[10px] font-mono uppercase bg-[#bf5af2]/15 text-[#bf5af2] border border-[#bf5af2]/30 px-2.5 py-0.5 rounded-full font-medium">
+            <h2 className="text-base font-semibold text-[#1d1d1f] tracking-tight">Time-Travel Debugging & Request Replay</h2>
+            <span className="text-[10px] font-mono uppercase bg-[#bf5af2]/10 text-[#bf5af2] border border-[#bf5af2]/25 px-2.5 py-0.5 rounded-full font-medium">
               State Checkpoints
             </span>
           </div>
-          <p className="text-xs text-[#a1a1a6] mt-1">
+          <p className="text-xs text-[#6e6e73] mt-1">
             Travel back to earlier mock database states, inspect point-in-time snapshots, diff modifications, and replay requests.
           </p>
         </div>
@@ -215,7 +215,7 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
             value={snapshotDesc}
             onChange={(e) => setSnapshotDesc(e.target.value)}
             placeholder="Checkpoint note..."
-            className="bg-[#1c1c1e] border border-white/10 rounded-full px-4 py-2 text-xs text-white placeholder-[#6e6e73] focus:outline-none focus:ring-2 focus:ring-[#0071e3] w-48 sm:w-56 font-mono"
+            className="bg-[#f5f5f7] border border-[#d2d2d7] rounded-full px-4 py-2 text-xs text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3] w-48 sm:w-56 font-mono"
           />
           <Button
             variant="primary"
@@ -230,14 +230,14 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
       </div>
 
       {actionSuccess && (
-        <div className="bg-[#30d158]/15 border border-[#30d158]/30 text-[#30d158] p-3.5 rounded-2xl text-xs flex items-center space-x-2">
+        <div className="bg-[#34c759]/10 border border-[#34c759]/25 text-[#15803d] p-3.5 rounded-2xl text-xs flex items-center space-x-2">
           <Check className="w-4 h-4 shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
 
       {/* Sub-Navigation Tabs */}
-      <div className="flex space-x-1 bg-[#161617] p-1 rounded-full border border-white/10 w-fit text-xs">
+      <div className="flex space-x-1 bg-[#f5f5f7] p-1 rounded-full border border-[#d2d2d7] w-fit text-xs">
         {[
           { id: 'timeline', label: 'Activity Timeline' },
           { id: 'snapshots', label: `Database Snapshots (${snapshots.length})` },
@@ -248,7 +248,7 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
             key={t.id}
             onClick={() => setSubTab(t.id as any)}
             className={`px-3.5 py-1.5 rounded-full font-medium transition-colors ${
-              subTab === t.id ? 'bg-[#0071e3] text-white font-semibold' : 'text-[#a1a1a6] hover:text-white'
+              subTab === t.id ? 'bg-[#0071e3] text-white font-semibold' : 'text-[#515154] hover:text-[#1d1d1f]'
             }`}
           >
             {t.label}
@@ -258,8 +258,8 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
 
       {/* TAB 1: ACTIVITY TIMELINE */}
       {subTab === 'timeline' && (
-        <div className="bg-[#161617] border border-white/10 rounded-3xl p-6 shadow-apple-sm">
-          <h3 className="text-xs font-semibold text-[#f5f5f7] uppercase tracking-wider mb-6 font-mono">
+        <div className="bg-white border border-black/[0.05] rounded-3xl p-6 shadow-apple-sm">
+          <h3 className="text-xs font-semibold text-[#1d1d1f] uppercase tracking-wider mb-6 font-mono">
             Chronological Audit Trail ({activeEnvironment.toUpperCase()})
           </h3>
 
@@ -268,7 +268,7 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
               No snapshot or request activity recorded yet in this environment.
             </p>
           ) : (
-            <div className="relative border-l border-white/10 ml-4 space-y-6">
+            <div className="relative border-l border-[#d2d2d7] ml-4 space-y-6">
               {snapshots.map((snap) => (
                 <div key={snap.id} className="relative pl-6">
                   <div className={`absolute -left-2.5 top-1 w-5 h-5 rounded-full border flex items-center justify-center ${
@@ -279,11 +279,11 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
                     <Camera className="w-2.5 h-2.5" />
                   </div>
 
-                  <div className="bg-[#1c1c1e] p-4 rounded-2xl border border-white/5 hover:border-white/15 transition-colors">
+                  <div className="bg-white p-4 rounded-2xl border border-[#d2d2d7]/50 hover:border-[#d2d2d7] transition-colors shadow-apple-sm">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className="font-semibold text-xs text-white">{snap.description}</span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-[#a1a1a6] uppercase">
+                        <span className="font-semibold text-xs text-[#1d1d1f]">{snap.description}</span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/5 text-[#515154] uppercase">
                           {snap.trigger}
                         </span>
                       </div>
@@ -293,7 +293,7 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
                     </div>
 
                     <div className="flex items-center justify-between mt-3 text-xs">
-                      <span className="text-[#a1a1a6] font-mono text-[11px]">
+                      <span className="text-[#6e6e73] font-mono text-[11px]">
                         {snap.recordCount} records across {Object.keys(snap.data || {}).length} resources
                       </span>
                       <div className="flex space-x-2">
@@ -325,9 +325,9 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
       {/* TAB 2: DATABASE SNAPSHOTS VIEWER */}
       {subTab === 'snapshots' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-[#161617] border border-white/10 rounded-3xl p-4 shadow-apple-sm space-y-3">
-            <div className="flex justify-between items-center pb-2 border-b border-white/10 px-2">
-              <span className="text-xs font-semibold text-white">Saved Snapshots</span>
+          <div className="bg-white border border-black/[0.05] rounded-3xl p-4 shadow-apple-sm space-y-3">
+            <div className="flex justify-between items-center pb-2 border-b border-[#d2d2d7]/50 px-2">
+              <span className="text-xs font-semibold text-[#1d1d1f]">Saved Snapshots</span>
               <span className="text-xs text-[#86868b] font-mono">{snapshots.length} total</span>
             </div>
 
@@ -338,11 +338,11 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
                   onClick={() => setSelectedSnapshot(s)}
                   className={`p-3 rounded-2xl border cursor-pointer transition-colors text-xs ${
                     selectedSnapshot?.id === s.id
-                      ? 'bg-[#0071e3]/15 border-[#0071e3]/50 text-white shadow-apple-sm'
-                      : 'bg-[#1c1c1e] border-white/5 hover:border-white/15 text-[#a1a1a6]'
+                      ? 'bg-[#0071e3]/10 border-[#0071e3]/40 text-[#1d1d1f] shadow-apple-sm'
+                      : 'bg-[#fbfbfd] border-[#d2d2d7]/50 hover:border-[#d2d2d7] text-[#6e6e73]'
                   }`}
                 >
-                  <div className="flex justify-between font-semibold text-white mb-1">
+                  <div className="flex justify-between font-semibold text-[#1d1d1f] mb-1">
                     <span className="truncate">{s.description}</span>
                     <span className="font-mono text-[10px] text-[#2997ff] uppercase">{s.trigger}</span>
                   </div>
@@ -355,12 +355,12 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
             </div>
           </div>
 
-          <div className="lg:col-span-2 bg-[#161617] border border-white/10 rounded-3xl p-5 shadow-apple-sm flex flex-col">
+          <div className="lg:col-span-2 bg-white border border-black/[0.05] rounded-3xl p-5 shadow-apple-sm flex flex-col">
             {selectedSnapshot ? (
               <>
-                <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+                <div className="flex items-center justify-between pb-4 border-b border-[#d2d2d7]/50 mb-4">
                   <div>
-                    <h3 className="font-semibold text-sm text-white">{selectedSnapshot.description}</h3>
+                    <h3 className="font-semibold text-sm text-[#1d1d1f]">{selectedSnapshot.description}</h3>
                     <div className="text-[11px] text-[#86868b] font-mono mt-0.5">
                       ID: {selectedSnapshot.id} &bull; Recorded: {selectedSnapshot.timestamp}
                     </div>
@@ -376,7 +376,7 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
                   </Button>
                 </div>
 
-                <div className="flex-1 bg-[#0a0a0c] p-4 rounded-2xl border border-white/10 overflow-auto font-mono text-xs text-[#2997ff] max-h-[440px] leading-relaxed">
+                <div className="flex-1 bg-[#000000] p-4 rounded-2xl border border-white/10 overflow-auto font-mono text-xs text-[#2997ff] max-h-[440px] leading-relaxed">
                   <pre>{JSON.stringify(selectedSnapshot.data, null, 2)}</pre>
                 </div>
               </>
@@ -389,14 +389,14 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
 
       {/* TAB 3: STATE COMPARISON (DIFF) */}
       {subTab === 'diff' && (
-        <div className="bg-[#161617] border border-white/10 rounded-3xl p-6 shadow-apple-sm space-y-6">
-          <div className="flex flex-col sm:flex-row items-center gap-4 bg-[#1c1c1e] p-4 rounded-2xl border border-white/10">
+        <div className="bg-white border border-black/[0.05] rounded-3xl p-6 shadow-apple-sm space-y-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4 bg-[#f5f5f7] p-4 rounded-2xl border border-[#d2d2d7]">
             <div className="flex-1 w-full">
-              <label className="block text-[11px] text-[#a1a1a6] mb-1 font-mono">Baseline Snapshot (A)</label>
+              <label className="block text-[11px] text-[#6e6e73] mb-1 font-mono">Baseline Snapshot (A)</label>
               <select
                 value={diffSnapshots.snapA || ''}
                 onChange={(e) => setDiffSnapshots({ ...diffSnapshots, snapA: e.target.value })}
-                className="w-full bg-[#121213] border border-white/10 rounded-xl p-2.5 text-xs text-white font-mono"
+                className="w-full bg-white border border-[#d2d2d7] rounded-xl p-2.5 text-xs text-[#1d1d1f] font-mono"
               >
                 <option value="">Select Snapshot A...</option>
                 {snapshots.map(s => <option key={s.id} value={s.id}>{s.description} ({new Date(s.timestamp).toLocaleTimeString()})</option>)}
@@ -406,11 +406,11 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
             <ArrowLeftRight className="w-5 h-5 text-[#86868b] shrink-0" />
 
             <div className="flex-1 w-full">
-              <label className="block text-[11px] text-[#a1a1a6] mb-1 font-mono">Comparison Snapshot (B)</label>
+              <label className="block text-[11px] text-[#6e6e73] mb-1 font-mono">Comparison Snapshot (B)</label>
               <select
                 value={diffSnapshots.snapB || ''}
                 onChange={(e) => setDiffSnapshots({ ...diffSnapshots, snapB: e.target.value })}
-                className="w-full bg-[#121213] border border-white/10 rounded-xl p-2.5 text-xs text-white font-mono"
+                className="w-full bg-white border border-[#d2d2d7] rounded-xl p-2.5 text-xs text-[#1d1d1f] font-mono"
               >
                 <option value="">Select Snapshot B...</option>
                 {snapshots.map(s => <option key={s.id} value={s.id}>{s.description} ({new Date(s.timestamp).toLocaleTimeString()})</option>)}
@@ -447,7 +447,7 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
               </div>
 
               {diffResult.added?.length > 0 && (
-                <div className="bg-[#1c1c1e] border border-[#30d158]/30 rounded-2xl p-4">
+                <div className="bg-[#34c759]/5 border border-[#34c759]/25 rounded-2xl p-4">
                   <h4 className="text-xs font-semibold text-[#30d158] uppercase mb-2 font-mono">Added Records (in Snapshot B)</h4>
                   <pre className="text-xs font-mono text-[#30d158] max-h-48 overflow-y-auto">
                     {JSON.stringify(diffResult.added, null, 2)}
@@ -456,7 +456,7 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
               )}
 
               {diffResult.removed?.length > 0 && (
-                <div className="bg-[#1c1c1e] border border-red-500/30 rounded-2xl p-4">
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
                   <h4 className="text-xs font-semibold text-[#ff453a] uppercase mb-2 font-mono">Deleted Records (from Snapshot A)</h4>
                   <pre className="text-xs font-mono text-[#ff453a] max-h-48 overflow-y-auto">
                     {JSON.stringify(diffResult.removed, null, 2)}
@@ -465,11 +465,11 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
               )}
 
               {diffResult.modified?.length > 0 && (
-                <div className="bg-[#1c1c1e] border border-[#ff9f0a]/30 rounded-2xl p-4">
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
                   <h4 className="text-xs font-semibold text-[#ff9f0a] uppercase mb-2 font-mono">Modified Records</h4>
                   <div className="space-y-2">
                     {diffResult.modified.map((m: any) => (
-                      <div key={m.id} className="bg-[#121213] p-3 rounded-xl border border-white/5 text-xs">
+                      <div key={m.id} className="bg-white p-3 rounded-xl border border-[#d2d2d7]/50 text-xs shadow-apple-sm">
                         <div className="flex justify-between font-mono font-semibold text-[#ff9f0a] mb-1">
                           <span>{m.resource} #{m.id}</span>
                           <span className="text-[#86868b] text-[10px]">Changed: {m.changes?.join(', ')}</span>
@@ -496,18 +496,18 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
 
       {/* TAB 4: REQUEST REPLAY */}
       {subTab === 'replay' && (
-        <div className="bg-[#161617] border border-white/10 rounded-3xl p-5 shadow-apple-sm space-y-4">
-          <div className="flex justify-between items-center pb-3 border-b border-white/10">
+        <div className="bg-white border border-black/[0.05] rounded-3xl p-5 shadow-apple-sm space-y-4">
+          <div className="flex justify-between items-center pb-3 border-b border-[#d2d2d7]/50">
             <div>
-              <h3 className="font-semibold text-xs text-white uppercase tracking-wider font-mono">Historical Request Log & Replay</h3>
-              <p className="text-xs text-[#a1a1a6] mt-0.5">Select any request to replay as exact verbatim response or live re-execution.</p>
+              <h3 className="font-semibold text-xs text-[#1d1d1f] uppercase tracking-wider font-mono">Historical Request Log & Replay</h3>
+              <p className="text-xs text-[#6e6e73] mt-0.5">Select any request to replay as exact verbatim response or live re-execution.</p>
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-white/10 bg-[#121213] text-[#86868b] uppercase font-mono text-[10px] tracking-wider">
+                <tr className="border-b border-[#d2d2d7]/50 bg-[#fbfbfd] text-[#6e6e73] uppercase font-mono text-[10px] tracking-wider">
                   <th className="py-3 px-3 font-medium">Timestamp</th>
                   <th className="py-3 px-3 font-medium">Method & Path</th>
                   <th className="py-3 px-3 font-medium text-center">Status</th>
@@ -515,9 +515,9 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
                   <th className="py-3 px-3 font-medium text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-mono">
+              <tbody className="divide-y divide-[#d2d2d7]/40 font-mono">
                 {logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-white/[0.03] transition-colors">
+                  <tr key={log.id} className="hover:bg-black/[0.02] transition-colors">
                     <td className="py-3 px-3 text-[#86868b] text-[11px]">
                       {new Date(log.timestamp).toLocaleTimeString()}
                     </td>
@@ -525,12 +525,12 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
                       <span className="mr-2">
                         <Badge method={log.method} size="sm" />
                       </span>
-                      <span className="text-[#f5f5f7]">{log.endpoint}</span>
+                      <span className="text-[#1d1d1f]">{log.endpoint}</span>
                     </td>
                     <td className="py-3 px-3 text-center">
                       <Badge statusCode={log.status} size="sm" />
                     </td>
-                    <td className="py-3 px-3 text-right text-[#a1a1a6]">
+                    <td className="py-3 px-3 text-right text-[#6e6e73]">
                       {log.durationMs}ms
                     </td>
                     <td className="py-3 px-3 text-right">
@@ -565,13 +565,13 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
       >
         {selectedLog && (
           <div className="space-y-4 text-xs font-mono">
-            <div className="bg-[#121213] p-3.5 rounded-2xl border border-white/10 text-[#a1a1a6]">
+            <div className="bg-[#f5f5f7] p-3.5 rounded-2xl border border-[#d2d2d7]/50 text-[#6e6e73]">
               <div>Original Timestamp: <span className="text-white">{selectedLog.timestamp}</span></div>
               <div>Original Status: <span className="text-[#30d158]">{selectedLog.status}</span> ({selectedLog.durationMs}ms)</div>
               {selectedLog.requestBody && (
                 <div className="mt-2">
                   <span className="text-[#86868b] block">Payload:</span>
-                  <pre className="text-[#d2d2d7] bg-[#1c1c1e] p-2.5 rounded-xl mt-1 overflow-x-auto">
+                  <pre className="text-[#1d1d1f] bg-[#f5f5f7] p-2.5 rounded-xl mt-1 overflow-x-auto">
                     {JSON.stringify(selectedLog.requestBody, null, 2)}
                   </pre>
                 </div>
@@ -582,13 +582,13 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
               <button
                 onClick={() => handleReplay('exact')}
                 disabled={replayLoading}
-                className="bg-[#1c1c1e] hover:bg-[#262629] p-4 rounded-2xl border border-white/10 text-left transition-colors"
+                className="bg-[#f5f5f7] hover:bg-[#e8e8ed] p-4 rounded-2xl border border-[#d2d2d7] text-left transition-colors"
               >
                 <div className="font-semibold text-[#2997ff] text-sm mb-1 flex items-center space-x-1.5">
                   <History className="w-4 h-4" />
                   <span>1. Exact Response Replay</span>
                 </div>
-                <p className="text-[11px] text-[#a1a1a6] font-sans">
+                <p className="text-[11px] text-[#6e6e73] font-sans">
                   Returns the previously recorded response verbatim without re-evaluating the server.
                 </p>
               </button>
@@ -596,25 +596,25 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
               <button
                 onClick={() => handleReplay('re-execute')}
                 disabled={replayLoading}
-                className="bg-[#1c1c1e] hover:bg-[#262629] p-4 rounded-2xl border border-white/10 text-left transition-colors"
+                className="bg-[#f5f5f7] hover:bg-[#e8e8ed] p-4 rounded-2xl border border-[#d2d2d7] text-left transition-colors"
               >
                 <div className="font-semibold text-[#30d158] text-sm mb-1 flex items-center space-x-1.5">
                   <Zap className="w-4 h-4" />
                   <span>2. Request Re-execution</span>
                 </div>
-                <p className="text-[11px] text-[#a1a1a6] font-sans">
+                <p className="text-[11px] text-[#6e6e73] font-sans">
                   Executes the exact same HTTP request live against the active database state.
                 </p>
               </button>
             </div>
 
             {replayResult && (
-              <div className="bg-[#121213] p-4 rounded-2xl border border-white/10 mt-4 space-y-2">
+              <div className="bg-[#f5f5f7] p-4 rounded-2xl border border-[#d2d2d7]/50 mt-4 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-semibold text-white uppercase font-sans">Replay Result ({replayResult.replayMode})</span>
+                  <span className="font-semibold text-[#1d1d1f] uppercase font-sans">Replay Result ({replayResult.replayMode})</span>
                   <span className="text-[#2997ff] font-mono">Status: {replayResult.statusCode} ({replayResult.durationMs}ms)</span>
                 </div>
-                <pre className="text-xs text-[#2997ff] max-h-48 overflow-y-auto bg-[#1c1c1e] p-3 rounded-xl">
+                <pre className="text-xs text-[#0071e3] max-h-48 overflow-y-auto bg-[#000000] p-3 rounded-xl">
                   {JSON.stringify(replayResult.response, null, 2)}
                 </pre>
               </div>
@@ -638,8 +638,8 @@ export const TimeTravelView: React.FC<TimeTravelViewProps> = ({
       >
         {restoreConfirmSnap && (
           <div className="space-y-4">
-            <div className="bg-[#121213] p-3.5 rounded-2xl border border-white/10 text-xs font-mono text-[#2997ff]">
-              <strong className="text-white text-sm block mb-1">{restoreConfirmSnap.description}</strong>
+            <div className="bg-[#f5f5f7] p-3.5 rounded-2xl border border-[#d2d2d7]/50 text-xs font-mono text-[#0071e3]">
+              <strong className="text-[#1d1d1f] text-sm block mb-1">{restoreConfirmSnap.description}</strong>
               <div className="text-[11px] text-[#86868b]">ID: {restoreConfirmSnap.id}</div>
               <div className="text-[11px] text-[#86868b]">Recorded: {restoreConfirmSnap.timestamp}</div>
             </div>

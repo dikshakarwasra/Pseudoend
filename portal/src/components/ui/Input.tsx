@@ -23,33 +23,33 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   return (
     <div className="w-full space-y-1.5">
       {label && (
-        <label htmlFor={inputId} className="block text-xs font-medium text-[#a1a1a6]">
+        <label htmlFor={inputId} className="block text-xs font-semibold text-[#1d1d1f]">
           {label}
         </label>
       )}
       <div className="relative flex items-center">
         {leftIcon && (
-          <span className="absolute left-3 text-[#86868b] pointer-events-none flex items-center">
+          <span className="absolute left-3.5 text-[#86868b] pointer-events-none flex items-center">
             {leftIcon}
           </span>
         )}
         <input
           ref={ref}
           id={inputId}
-          className={`w-full bg-[#1c1c1e] border rounded-xl py-2 text-xs text-[#f5f5f7] placeholder-[#6e6e73] transition-all focus:outline-none focus:ring-2 focus:ring-[#0071e3]/60 focus:border-[#0071e3] disabled:opacity-40 disabled:bg-[#161617] ${
-            leftIcon ? 'pl-9' : 'pl-3'
-          } ${rightIcon ? 'pr-9' : 'pr-3'} ${
-            error ? 'border-red-500/60 text-red-200' : 'border-white/10 hover:border-white/20'
+          className={`w-full bg-white border rounded-xl py-2 text-xs text-[#1d1d1f] placeholder-[#86868b] transition-all focus:outline-none focus:ring-4 focus:ring-[#0071e3]/15 focus:border-[#0071e3] disabled:opacity-40 disabled:bg-[#f5f5f7] shadow-sm ${
+            leftIcon ? 'pl-9' : 'pl-3.5'
+          } ${rightIcon ? 'pr-9' : 'pr-3.5'} ${
+            error ? 'border-[#ff3b30] text-[#dc2626]' : 'border-[#d2d2d7] hover:border-[#86868b]'
           } ${className}`}
           {...props}
         />
         {rightIcon && (
-          <span className="absolute right-3 text-[#86868b] flex items-center">
+          <span className="absolute right-3.5 text-[#86868b] flex items-center">
             {rightIcon}
           </span>
         )}
       </div>
-      {error && <p className="text-[11px] text-[#ff453a]">{error}</p>}
+      {error && <p className="text-[11px] text-[#dc2626] font-medium">{error}</p>}
       {helperText && !error && <p className="text-[11px] text-[#86868b]">{helperText}</p>}
     </div>
   );

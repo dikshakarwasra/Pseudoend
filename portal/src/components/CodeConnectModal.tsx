@@ -214,7 +214,7 @@ curl -X ${route.method} "${fullUrl}" \\
       maxWidth="3xl"
     >
       {/* Framework Tabs */}
-      <div className="flex flex-wrap gap-1.5 border-b border-white/5 pb-3 mb-4 text-xs font-medium">
+      <div className="flex flex-wrap gap-1.5 border-b border-[#d2d2d7]/50 pb-3 mb-4 text-xs font-medium">
         {[
           { id: 'react', label: 'React (Fetch)' },
           { id: 'react-query', label: 'TanStack Query' },
@@ -230,7 +230,7 @@ curl -X ${route.method} "${fullUrl}" \\
             className={`px-3.5 py-1.5 rounded-full transition-all text-xs font-medium ${
               tab === t.id
                 ? 'bg-[#0071e3] text-white font-semibold shadow-sm'
-                : 'text-[#86868b] hover:text-white hover:bg-white/5'
+                : 'text-[#515154] hover:text-[#1d1d1f] hover:bg-black/[0.04]'
             }`}
           >
             {t.label}
@@ -242,7 +242,7 @@ curl -X ${route.method} "${fullUrl}" \\
       <div className="relative">
         <button
           onClick={handleCopy}
-          className="absolute top-3 right-3 flex items-center space-x-1.5 bg-[#1c1c1e] hover:bg-[#2c2c2e] text-[#f5f5f7] px-3 py-1.5 rounded-full text-xs font-medium border border-white/10 transition-colors z-10"
+          className="absolute top-3 right-3 flex items-center space-x-1.5 bg-[#f5f5f7] hover:bg-[#e8e8ed] text-[#1d1d1f] px-3 py-1.5 rounded-full text-xs font-medium border border-[#d2d2d7] transition-colors z-10"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-[#30d158]" /> : <Copy className="w-3.5 h-3.5" />}
           <span>{copied ? 'Copied to Clipboard!' : 'Copy Code'}</span>

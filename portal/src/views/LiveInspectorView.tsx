@@ -104,7 +104,7 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
   return (
     <div className="space-y-6">
       {/* Live Request Runner */}
-      <div className="bg-[#161617] p-5 rounded-2xl border border-white/10 shadow-xl">
+      <div className="bg-white p-5 rounded-2xl border border-black/[0.05] shadow-apple-sm">
         <div className="text-xs font-semibold text-[#86868b] mb-3 flex items-center space-x-2">
           <Activity className="w-4 h-4 text-[#2997ff]" />
           <span>Interactive Live Request Runner</span>
@@ -114,7 +114,7 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
           <select
             value={testMethod}
             onChange={(e) => setTestMethod(e.target.value)}
-            className="bg-[#1c1c1e] border border-white/10 rounded-xl px-3 py-2 text-xs font-mono font-semibold text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
+            className="bg-white border border-[#d2d2d7] rounded-xl px-3 py-2 text-xs font-mono font-semibold text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20"
           >
             <option value="GET">GET</option>
             <option value="POST">POST</option>
@@ -127,7 +127,7 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
             value={testPath}
             onChange={(e) => setTestPath(e.target.value)}
             placeholder="/api/v1/users"
-            className="flex-1 bg-[#1c1c1e] border border-white/10 rounded-xl px-3.5 py-2 text-xs font-mono text-white placeholder-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
+            className="flex-1 bg-white border border-[#d2d2d7] rounded-xl px-3.5 py-2 text-xs font-mono text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
           />
 
           <Button
@@ -145,8 +145,8 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
       {/* Two Column Log Inspector */}
       <div className="grid md:grid-cols-2 gap-5">
         {/* Left: Stream of Requests */}
-        <div className="bg-[#161617] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-          <div className="p-3.5 border-b border-white/5 bg-[#1c1c1e] flex items-center justify-between text-xs text-[#86868b]">
+        <div className="bg-white border border-black/[0.05] rounded-2xl overflow-hidden shadow-apple-sm">
+          <div className="p-3.5 border-b border-[#d2d2d7]/50 bg-[#fbfbfd] flex items-center justify-between text-xs text-[#6e6e73]">
             <span className="font-semibold uppercase tracking-wider font-mono text-[10px]">Request History</span>
             <span className="text-[11px] font-mono">{logs.length} requests</span>
           </div>
@@ -156,13 +156,13 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
                 key={log.id}
                 onClick={() => setSelectedLog(log)}
                 className={`p-3.5 text-xs cursor-pointer transition-colors flex items-center justify-between ${
-                  selectedLog?.id === log.id ? 'bg-white/5' : 'hover:bg-white/[0.02]'
+                  selectedLog?.id === log.id ? 'bg-[#e8f2fc]/40' : 'hover:bg-black/[0.02]'
                 }`}
               >
                 <div className="flex items-center space-x-2.5">
                   <Badge statusCode={log.status} size="sm" />
                   <Badge method={log.method} size="sm" />
-                  <span className="font-mono text-[#f5f5f7] truncate max-w-[200px]" title={log.url}>
+                  <span className="font-mono text-[#1d1d1f] truncate max-w-[200px]" title={log.url}>
                     {log.url.split('/mock/')[1] ? '/' + log.url.split('/mock/')[1].split('/').slice(1).join('/') : log.url}
                   </span>
                 </div>
@@ -177,8 +177,8 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
         </div>
 
         {/* Right: Response Inspector */}
-        <div className="bg-[#161617] border border-white/10 rounded-2xl overflow-hidden flex flex-col shadow-xl">
-          <div className="p-3.5 border-b border-white/5 bg-[#1c1c1e] flex items-center justify-between text-xs text-[#86868b]">
+        <div className="bg-white border border-black/[0.05] rounded-2xl overflow-hidden flex flex-col shadow-apple-sm">
+          <div className="p-3.5 border-b border-[#d2d2d7]/50 bg-[#fbfbfd] flex items-center justify-between text-xs text-[#6e6e73]">
             <span className="font-semibold uppercase tracking-wider font-mono text-[10px]">Response Inspector</span>
             {selectedLog && (
               <span className="font-mono text-[#2997ff] text-xs">
@@ -188,7 +188,7 @@ export const LiveInspectorView: React.FC<LiveInspectorViewProps> = ({ activeProj
           </div>
           <div className="p-4 flex-1 bg-[#000000] font-mono text-xs overflow-auto max-h-[460px] leading-relaxed">
             {selectedLog ? (
-              <pre className="text-[#f5f5f7]">
+              <pre className="text-[#1d1d1f]">
                 {JSON.stringify(selectedLog.response, null, 2)}
               </pre>
             ) : (

@@ -95,7 +95,7 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({ apiBaseUrl, 
         </div>
         <button
           onClick={fetchData}
-          className="p-2 text-[#86868b] hover:text-white bg-[#161617] rounded-full border border-white/10 hover:border-white/20 transition-colors"
+          className="p-2 text-[#86868b] hover:text-[#1d1d1f] bg-[#f5f5f7] rounded-full border border-[#d2d2d7] hover:border-[#b0b0b7] transition-colors"
           title="Refresh metrics"
         >
           <RefreshCw className="w-3.5 h-3.5" />
@@ -105,13 +105,13 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({ apiBaseUrl, 
       {actionMessage && (
         <div className="p-3.5 bg-[#0071e3]/10 border border-[#0071e3]/30 rounded-xl text-xs text-[#2997ff] flex justify-between items-center">
           <span>{actionMessage}</span>
-          <button onClick={() => setActionMessage(null)} className="text-[#86868b] hover:text-white">✕</button>
+          <button onClick={() => setActionMessage(null)} className="text-[#86868b] hover:text-[#1d1d1f]">✕</button>
         </div>
       )}
 
       {/* Metrics Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-[#161617] p-5 rounded-2xl border border-white/10 shadow-xl">
+        <div className="bg-white p-5 rounded-2xl border border-black/[0.05] shadow-apple-sm">
           <div className="flex items-center justify-between text-[#86868b] text-xs mb-1">
             <span>Registered Users</span>
             <Users className="w-4 h-4 text-[#86868b]" />
@@ -120,7 +120,7 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({ apiBaseUrl, 
           <div className="text-[11px] text-[#2997ff] mt-1 font-mono">Active Accounts</div>
         </div>
 
-        <div className="bg-[#161617] p-5 rounded-2xl border border-white/10 shadow-xl">
+        <div className="bg-white p-5 rounded-2xl border border-black/[0.05] shadow-apple-sm">
           <div className="flex items-center justify-between text-[#86868b] text-xs mb-1">
             <span>Daily Requests</span>
             <Activity className="w-4 h-4 text-[#2997ff]" />
@@ -129,7 +129,7 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({ apiBaseUrl, 
           <div className="text-[11px] text-[#86868b] mt-1">Aggregated today</div>
         </div>
 
-        <div className="bg-[#161617] p-5 rounded-2xl border border-white/10 shadow-xl">
+        <div className="bg-white p-5 rounded-2xl border border-black/[0.05] shadow-apple-sm">
           <div className="flex items-center justify-between text-[#86868b] text-xs mb-1">
             <span>Estimated AWS Cost</span>
             <DollarSign className="w-4 h-4 text-[#64d2ff]" />
@@ -140,7 +140,7 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({ apiBaseUrl, 
           <div className="text-[11px] text-[#30d158] mt-1 font-mono font-medium">{stats.freeTierStatus}</div>
         </div>
 
-        <div className="bg-[#161617] p-5 rounded-2xl border border-white/10 shadow-xl">
+        <div className="bg-white p-5 rounded-2xl border border-black/[0.05] shadow-apple-sm">
           <div className="flex items-center justify-between text-[#86868b] text-xs mb-1">
             <span>Pending Upgrades</span>
             <Shield className="w-4 h-4 text-[#ff9f0a]" />
@@ -153,8 +153,8 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({ apiBaseUrl, 
       </div>
 
       {/* Pending Limit Requests Queue */}
-      <div className="bg-[#161617] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-        <div className="p-4 border-b border-white/5 bg-[#1c1c1e] flex items-center justify-between">
+      <div className="bg-white border border-black/[0.05] rounded-2xl overflow-hidden shadow-apple-sm">
+        <div className="p-4 border-b border-[#d2d2d7]/50 bg-[#fbfbfd] flex items-center justify-between">
           <h3 className="text-xs font-semibold text-white uppercase font-mono tracking-wider">
             Pending Quota Increase Requests
           </h3>
@@ -170,11 +170,11 @@ export const AdminConsoleView: React.FC<AdminConsoleViewProps> = ({ apiBaseUrl, 
         ) : (
           <div className="divide-y divide-white/5">
             {requests.filter(r => r.status === 'PENDING').map((req) => (
-              <div key={req.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors">
+              <div key={req.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-black/[0.02] transition-colors">
                 <div>
                   <div className="flex items-center space-x-2 mb-1">
                     <span className="text-xs font-semibold text-white">{req.userEmail}</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#1c1c1e] text-[#86868b] border border-white/10">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#f5f5f7] text-[#515154] border border-[#d2d2d7]">
                       Current: {req.currentTier}
                     </span>
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0071e3]/10 text-[#2997ff] border border-[#0071e3]/20 font-bold">

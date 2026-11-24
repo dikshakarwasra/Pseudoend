@@ -93,7 +93,7 @@ export const QuotaRequestModal: React.FC<QuotaRequestModalProps> = ({
                 className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                   requestedTier === 'developer'
                     ? 'border-[#0071e3] bg-[#0071e3]/10 text-white shadow-sm ring-1 ring-[#0071e3]'
-                    : 'border-white/10 bg-[#161617] text-[#86868b] hover:border-white/20'
+                    : 'border-[#d2d2d7] bg-[#f5f5f7] text-[#6e6e73] hover:border-[#b0b0b7]'
                 }`}
               >
                 <div className="font-semibold text-sm text-white">Developer Tier</div>
@@ -106,7 +106,7 @@ export const QuotaRequestModal: React.FC<QuotaRequestModalProps> = ({
                 className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                   requestedTier === 'pro'
                     ? 'border-[#0071e3] bg-[#0071e3]/10 text-white shadow-sm ring-1 ring-[#0071e3]'
-                    : 'border-white/10 bg-[#161617] text-[#86868b] hover:border-white/20'
+                    : 'border-[#d2d2d7] bg-[#f5f5f7] text-[#6e6e73] hover:border-[#b0b0b7]'
                 }`}
               >
                 <div className="font-semibold text-sm text-white">Pro Tier</div>
@@ -125,7 +125,7 @@ export const QuotaRequestModal: React.FC<QuotaRequestModalProps> = ({
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="Briefly describe what frontend application or project you are building..."
-              className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl p-3 text-xs text-white placeholder-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
+              className="w-full bg-white border border-[#d2d2d7] rounded-xl p-3 text-xs text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20"
               required
             />
           </div>

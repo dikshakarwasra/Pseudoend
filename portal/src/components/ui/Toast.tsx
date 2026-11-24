@@ -42,27 +42,27 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={value}>
       {children}
       {/* Toast Render Container */}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none">
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`pointer-events-auto flex items-center justify-between p-3.5 rounded-2xl border text-xs shadow-apple-md backdrop-blur-xl animate-scale-in transition-all ${
+            className={`pointer-events-auto flex items-center justify-between p-4 rounded-2xl border text-xs shadow-apple-md backdrop-blur-xl animate-scale-in transition-all ${
               t.type === 'success'
-                ? 'bg-[#1c1c1e]/90 border-white/10 text-[#f5f5f7]'
+                ? 'bg-white/95 border-[#34c759]/30 text-[#1d1d1f]'
                 : t.type === 'error'
-                ? 'bg-[#1c1c1e]/90 border-red-500/30 text-[#ff453a]'
-                : 'bg-[#1c1c1e]/90 border-white/10 text-[#f5f5f7]'
+                ? 'bg-white/95 border-[#ff3b30]/30 text-[#dc2626]'
+                : 'bg-white/95 border-black/10 text-[#1d1d1f]'
             }`}
           >
-            <div className="flex items-center gap-2.5">
-              {t.type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#30d158] shrink-0" />}
-              {t.type === 'error' && <AlertCircle className="w-4 h-4 text-[#ff453a] shrink-0" />}
-              {t.type === 'info' && <Info className="w-4 h-4 text-[#2997ff] shrink-0" />}
-              <span className="font-medium">{t.message}</span>
+            <div className="flex items-center gap-3">
+              {t.type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#34c759] shrink-0" />}
+              {t.type === 'error' && <AlertCircle className="w-4 h-4 text-[#ff3b30] shrink-0" />}
+              {t.type === 'info' && <Info className="w-4 h-4 text-[#0071e3] shrink-0" />}
+              <span className="font-semibold text-xs leading-snug">{t.message}</span>
             </div>
             <button
               onClick={() => removeToast(t.id)}
-              className="text-[#86868b] hover:text-white p-1 rounded-full transition-colors ml-2"
+              className="text-[#86868b] hover:text-[#1d1d1f] p-1 rounded-full hover:bg-black/5 transition-colors ml-2"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -79,7 +79,7 @@ export const useToast = () => {
     return {
       toast: (msg: string) => console.log(msg),
       success: (msg: string) => console.log(msg),
-      error: (msg: string) => console.error(msg),
+      error: (msg: string) => console.log(msg),
     };
   }
   return ctx;

@@ -18,20 +18,20 @@ export const Badge: React.FC<BadgeProps> = ({
   className = '',
   ...props
 }) => {
-  const sizeClass = size === 'sm' ? 'text-[10px] px-2 py-0.2' : 'text-[11px] px-2.5 py-0.5';
+  const sizeClass = size === 'sm' ? 'text-[10px] px-2 py-0.5' : 'text-[11px] px-2.5 py-0.5';
 
   if (method) {
     const m = method.toUpperCase();
-    let methodColors = 'bg-white/10 text-white border-white/15';
-    if (m === 'GET') methodColors = 'bg-[#0071e3]/15 text-[#2997ff] border-[#0071e3]/30';
-    else if (m === 'POST') methodColors = 'bg-[#bf5af2]/15 text-[#bf5af2] border-[#bf5af2]/30';
-    else if (m === 'PUT') methodColors = 'bg-[#ff9f0a]/15 text-[#ff9f0a] border-[#ff9f0a]/30';
-    else if (m === 'PATCH') methodColors = 'bg-[#64d2ff]/15 text-[#64d2ff] border-[#64d2ff]/30';
-    else if (m === 'DELETE') methodColors = 'bg-[#ff453a]/15 text-[#ff453a] border-[#ff453a]/30';
+    let methodColors = 'bg-black/5 text-[#1d1d1f] border-black/10';
+    if (m === 'GET') methodColors = 'bg-[#0071e3]/10 text-[#0071e3] border-[#0071e3]/20';
+    else if (m === 'POST') methodColors = 'bg-[#af52de]/10 text-[#9333ea] border-[#af52de]/20';
+    else if (m === 'PUT') methodColors = 'bg-[#ff9500]/10 text-[#d97706] border-[#ff9500]/20';
+    else if (m === 'PATCH') methodColors = 'bg-[#06b6d4]/10 text-[#0891b2] border-[#06b6d4]/20';
+    else if (m === 'DELETE') methodColors = 'bg-[#ff3b30]/10 text-[#dc2626] border-[#ff3b30]/20';
 
     return (
       <span
-        className={`inline-flex items-center font-mono font-semibold rounded-full border ${methodColors} ${sizeClass} ${className}`}
+        className={`inline-flex items-center font-mono font-bold rounded-full border ${methodColors} ${sizeClass} ${className}`}
         {...props}
       >
         {m}
@@ -40,15 +40,15 @@ export const Badge: React.FC<BadgeProps> = ({
   }
 
   if (statusCode !== undefined) {
-    let statusColors = 'bg-white/10 text-[#a1a1a6] border-white/10';
-    if (statusCode >= 200 && statusCode < 300) statusColors = 'bg-[#30d158]/15 text-[#30d158] border-[#30d158]/30';
-    else if (statusCode >= 300 && statusCode < 400) statusColors = 'bg-[#64d2ff]/15 text-[#64d2ff] border-[#64d2ff]/30';
-    else if (statusCode >= 400 && statusCode < 500) statusColors = 'bg-[#ff9f0a]/15 text-[#ff9f0a] border-[#ff9f0a]/30';
-    else if (statusCode >= 500) statusColors = 'bg-[#ff453a]/15 text-[#ff453a] border-[#ff453a]/30';
+    let statusColors = 'bg-black/5 text-[#6e6e73] border-black/10';
+    if (statusCode >= 200 && statusCode < 300) statusColors = 'bg-[#34c759]/10 text-[#15803d] border-[#34c759]/25 font-semibold';
+    else if (statusCode >= 300 && statusCode < 400) statusColors = 'bg-[#0071e3]/10 text-[#0071e3] border-[#0071e3]/20 font-semibold';
+    else if (statusCode >= 400 && statusCode < 500) statusColors = 'bg-[#ff9500]/10 text-[#d97706] border-[#ff9500]/25 font-semibold';
+    else if (statusCode >= 500) statusColors = 'bg-[#ff3b30]/10 text-[#dc2626] border-[#ff3b30]/25 font-semibold';
 
     return (
       <span
-        className={`inline-flex items-center font-mono font-medium rounded-full border ${statusColors} ${sizeClass} ${className}`}
+        className={`inline-flex items-center font-mono rounded-full border ${statusColors} ${sizeClass} ${className}`}
         {...props}
       >
         {statusCode}
@@ -57,14 +57,14 @@ export const Badge: React.FC<BadgeProps> = ({
   }
 
   const variantStyles = {
-    neutral: 'bg-white/10 text-[#f5f5f7] border-white/15',
-    success: 'bg-[#30d158]/15 text-[#30d158] border-[#30d158]/30',
-    warning: 'bg-[#ff9f0a]/15 text-[#ff9f0a] border-[#ff9f0a]/30',
-    danger: 'bg-[#ff453a]/15 text-[#ff453a] border-[#ff453a]/30',
-    info: 'bg-[#0071e3]/15 text-[#2997ff] border-[#0071e3]/30',
-    method: 'bg-white/10 text-white border-white/15',
-    status: 'bg-white/10 text-white border-white/15',
-    env: 'bg-white/10 text-white border-white/15',
+    neutral: 'bg-black/5 text-[#1d1d1f] border-black/10',
+    success: 'bg-[#34c759]/10 text-[#15803d] border-[#34c759]/25',
+    warning: 'bg-[#ff9500]/10 text-[#d97706] border-[#ff9500]/25',
+    danger: 'bg-[#ff3b30]/10 text-[#dc2626] border-[#ff3b30]/25',
+    info: 'bg-[#0071e3]/10 text-[#0071e3] border-[#0071e3]/20',
+    method: 'bg-black/5 text-[#1d1d1f] border-black/10',
+    status: 'bg-black/5 text-[#1d1d1f] border-black/10',
+    env: 'bg-black/5 text-[#1d1d1f] border-black/10',
   };
 
   return (

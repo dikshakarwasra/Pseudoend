@@ -299,7 +299,7 @@ export const ApiImportView: React.FC<ApiImportViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-[#161617] p-6 rounded-2xl border border-white/10 shadow-xl">
+      <div className="bg-white p-6 rounded-2xl border border-black/[0.05] shadow-apple-sm">
         <div className="flex items-center space-x-2.5">
           <div className="w-8 h-8 rounded-full bg-[#0071e3]/10 border border-[#0071e3]/20 flex items-center justify-center text-[#2997ff]">
             <FileUp className="w-4 h-4" />
@@ -334,7 +334,7 @@ export const ApiImportView: React.FC<ApiImportViewProps> = ({
               <div
                 key={tmpl.id}
                 onClick={() => setSchemaText(JSON.stringify(tmpl.spec, null, 2))}
-                className="bg-[#161617] hover:bg-[#1c1c1e] p-5 rounded-2xl border border-white/10 hover:border-white/20 cursor-pointer transition-all flex flex-col justify-between shadow-lg group"
+                className="bg-white hover:bg-[#f5f5f7] p-5 rounded-2xl border border-[#d2d2d7] hover:border-[#b0b0b7] cursor-pointer transition-all flex flex-col justify-between shadow-lg group"
               >
                 <div>
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center border mb-3.5 ${tmpl.color}`}>
@@ -356,8 +356,8 @@ export const ApiImportView: React.FC<ApiImportViewProps> = ({
       </div>
 
       {/* Blueprint Editor */}
-      <div className="bg-[#161617] border border-white/10 rounded-2xl p-5 space-y-4 shadow-xl">
-        <div className="flex items-center justify-between pb-3 border-b border-white/5">
+      <div className="bg-white border border-black/[0.05] rounded-2xl p-5 space-y-4 shadow-apple-sm">
+        <div className="flex items-center justify-between pb-3 border-b border-[#d2d2d7]/50">
           <div className="flex items-center space-x-2">
             <Code className="w-4 h-4 text-[#2997ff]" />
             <span className="text-xs font-semibold text-white">OpenAPI / Swagger JSON Blueprint</span>

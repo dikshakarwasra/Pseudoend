@@ -127,7 +127,7 @@ export const RouteModal: React.FC<RouteModalProps> = ({
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value as any)}
-              className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] font-mono font-semibold"
+              className="w-full bg-white border border-[#d2d2d7] rounded-xl px-2.5 py-2 text-xs text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 font-mono font-semibold"
             >
               <option value="GET">GET</option>
               <option value="POST">POST</option>
@@ -145,7 +145,7 @@ export const RouteModal: React.FC<RouteModalProps> = ({
               value={path}
               onChange={(e) => setPath(e.target.value)}
               placeholder="/api/v1/users/:id"
-              className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] font-mono"
+              className="w-full bg-white border border-[#d2d2d7] rounded-xl px-3 py-2 text-xs text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 font-mono"
               required
             />
           </div>
@@ -155,7 +155,7 @@ export const RouteModal: React.FC<RouteModalProps> = ({
             <select
               value={statusCode}
               onChange={(e) => setStatusCode(Number(e.target.value))}
-              className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl px-2 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] font-mono font-semibold"
+              className="w-full bg-white border border-[#d2d2d7] rounded-xl px-2 py-2 text-xs text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 font-mono font-semibold"
             >
               <option value={200}>200 OK</option>
               <option value={201}>201 Created</option>
@@ -170,7 +170,7 @@ export const RouteModal: React.FC<RouteModalProps> = ({
         </div>
 
         {/* Sliders: Latency & Chaos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#1c1c1e] p-4 rounded-2xl border border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#f5f5f7] p-4 rounded-2xl border border-[#d2d2d7]/50">
           <div>
             <div className="flex justify-between items-center mb-1.5 text-xs">
               <span className="text-[#86868b] font-medium flex items-center">
@@ -215,7 +215,7 @@ export const RouteModal: React.FC<RouteModalProps> = ({
         </div>
 
         {/* Echo Mode Toggle */}
-        <div className="flex items-center space-x-3 bg-[#1c1c1e] p-3 rounded-xl border border-white/10">
+        <div className="flex items-center space-x-3 bg-[#f5f5f7] p-3 rounded-xl border border-[#d2d2d7]/50">
           <input
             type="checkbox"
             id="isEcho"
@@ -240,28 +240,28 @@ export const RouteModal: React.FC<RouteModalProps> = ({
                 <button
                   type="button"
                   onClick={() => insertTag('{{uuid}}')}
-                  className="text-[#86868b] hover:text-white bg-[#1c1c1e] px-2.5 py-0.5 rounded-full border border-white/10 transition-colors"
+                  className="text-[#515154] hover:text-[#1d1d1f] bg-[#f5f5f7] px-2.5 py-0.5 rounded-full border border-[#d2d2d7] transition-colors"
                 >
                   +uuid
                 </button>
                 <button
                   type="button"
                   onClick={() => insertTag('{{faker.name.fullName}}')}
-                  className="text-[#86868b] hover:text-white bg-[#1c1c1e] px-2.5 py-0.5 rounded-full border border-white/10 transition-colors"
+                  className="text-[#515154] hover:text-[#1d1d1f] bg-[#f5f5f7] px-2.5 py-0.5 rounded-full border border-[#d2d2d7] transition-colors"
                 >
                   +name
                 </button>
                 <button
                   type="button"
                   onClick={() => insertTag('{{faker.internet.email}}')}
-                  className="text-[#86868b] hover:text-white bg-[#1c1c1e] px-2.5 py-0.5 rounded-full border border-white/10 transition-colors"
+                  className="text-[#515154] hover:text-[#1d1d1f] bg-[#f5f5f7] px-2.5 py-0.5 rounded-full border border-[#d2d2d7] transition-colors"
                 >
                   +email
                 </button>
                 <button
                   type="button"
                   onClick={handleFormatJson}
-                  className="text-[#86868b] hover:text-white bg-[#1c1c1e] px-2.5 py-0.5 rounded-full border border-white/10 transition-colors"
+                  className="text-[#515154] hover:text-[#1d1d1f] bg-[#f5f5f7] px-2.5 py-0.5 rounded-full border border-[#d2d2d7] transition-colors"
                   title="Format JSON"
                 >
                   Format

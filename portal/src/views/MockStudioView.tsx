@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Plus, Search, Code2, Edit2, Trash2, Sliders, AlertTriangle, ExternalLink, RefreshCw } from 'lucide-react';
+import { Plus, Search, Code2, Edit2, Trash2, Sliders, AlertTriangle, RefreshCw, Copy, Check } from 'lucide-react';
 import { MockRoute, Project } from '../types.js';
+import { Button } from '../components/ui/Button.js';
+import { Badge } from '../components/ui/Badge.js';
 
 interface MockStudioViewProps {
   routes: MockRoute[];
@@ -25,6 +27,7 @@ export const MockStudioView: React.FC<MockStudioViewProps> = ({
 }) => {
   const [search, setSearch] = useState('');
   const [filterMethod, setFilterMethod] = useState<string>('ALL');
+  const [copiedPath, setCopiedPath] = useState<string | null>(null);
 
   const filteredRoutes = routes.filter((r) => {
     const matchesSearch = r.path.toLowerCase().includes(search.toLowerCase());
@@ -32,42 +35,39 @@ export const MockStudioView: React.FC<MockStudioViewProps> = ({
     return matchesSearch && matchesMethod;
   });
 
-  const getMethodBadgeClass = (method: string) => {
-    switch (method.toUpperCase()) {
-      case 'GET': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-      case 'POST': return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
-      case 'PUT': return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-      case 'PATCH': return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
-      case 'DELETE': return 'bg-red-500/10 text-red-400 border-red-500/30';
-      default: return 'bg-slate-800 text-slate-300 border-slate-700';
-    }
+  const handleCopyPath = (path: string) => {
+    navigator.clipboard.writeText(path);
+    setCopiedPath(path);
+    setTimeout(() => setCopiedPath(null), 1500);
   };
 
   return (
-    <div className="space-y-6">
-      {/* Top Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800 backdrop-blur-sm">
-        <div className="flex items-center space-x-3">
-          <div className="relative flex-1 sm:w-64">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+    <div className="space-y-5">
+      {/* Top Filter and Action Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#161617] p-3.5 rounded-2xl border border-white/10 shadow-apple-sm">
+        <div className="flex flex-wrap items-center gap-2.5 flex-1">
+          {/* Search Input */}
+          <div className="relative flex-1 min-w-[200px] max-w-xs">
+            <Search className="w-3.5 h-3.5 text-[#86868b] absolute left-3 top-2.5" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Filter routes by path..."
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              placeholder="Search endpoints..."
+              className="w-full bg-[#1c1c1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs text-[#f5f5f7] placeholder-[#6e6e73] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/60 font-mono"
             />
           </div>
 
-          <div className="flex space-x-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+          {/* Method Filter Pills */}
+          <div className="flex space-x-1 bg-[#1c1c1e] p-1 rounded-full border border-white/10 text-xs">
             {['ALL', 'GET', 'POST', 'PUT', 'DELETE'].map((m) => (
               <button
                 key={m}
                 onClick={() => setFilterMethod(m)}
-                className={`px-2.5 py-1 rounded transition-colors ${
+                className={`px-3 py-0.5 rounded-full text-[11px] font-mono transition-colors ${
                   filterMethod === m
-                    ? 'bg-slate-800 text-white font-medium'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#0071e3] text-white font-semibold'
+                    : 'text-[#86868b] hover:text-[#f5f5f7]'
                 }`}
               >
                 {m}
@@ -75,145 +75,165 @@ export const MockStudioView: React.FC<MockStudioViewProps> = ({
             ))}
           </div>
 
+          {/* Refresh button */}
           <button
             onClick={onRefresh}
-            className="p-2 text-slate-400 hover:text-white bg-slate-950 rounded-lg border border-slate-800"
+            className="p-2 text-[#86868b] hover:text-white bg-[#1c1c1e] rounded-full border border-white/10 hover:border-white/20 transition-colors"
             title="Refresh routes"
           >
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <button
+        <Button
+          variant="primary"
+          size="sm"
+          icon={<Plus className="w-3.5 h-3.5" />}
           onClick={onOpenNewRoute}
-          className="flex items-center space-x-2 bg-emerald-400 hover:bg-emerald-300 text-black px-4 py-2 rounded-lg text-xs font-semibold transition-colors shadow-lg shadow-emerald-500/10"
         >
-          <Plus className="w-4 h-4" />
-          <span>New Mock Route</span>
-        </button>
+          New Mock Route
+        </Button>
       </div>
 
       {/* Routes Table */}
-      <div className="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden backdrop-blur-sm">
+      <div className="bg-[#161617] border border-white/10 rounded-3xl overflow-hidden shadow-apple-sm">
         {filteredRoutes.length === 0 ? (
           <div className="text-center py-16 px-4">
-            <div className="w-12 h-12 rounded-xl bg-slate-800/60 border border-slate-700 flex items-center justify-center mx-auto mb-3 text-slate-400">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-3 text-[#a1a1a6]">
               <Code2 className="w-6 h-6" />
             </div>
-            <h4 className="text-sm font-semibold text-white mb-1">No Mock Endpoints Configured</h4>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto mb-4">
-              Get started by adding your first mock route to test your frontend.
+            <h4 className="text-sm font-semibold text-[#f5f5f7] mb-1">No Mock Endpoints Found</h4>
+            <p className="text-xs text-[#86868b] max-w-sm mx-auto mb-4">
+              {search || filterMethod !== 'ALL'
+                ? 'No routes matched your filter query. Try resetting filters.'
+                : 'Get started by creating your first mock route to test your frontend.'}
             </p>
-            <button
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Plus className="w-3.5 h-3.5" />}
               onClick={onOpenNewRoute}
-              className="inline-flex items-center space-x-2 bg-emerald-400 hover:bg-emerald-300 text-black px-4 py-2 rounded-lg text-xs font-semibold transition-colors"
             >
-              <Plus className="w-4 h-4" />
-              <span>Create Mock Route</span>
-            </button>
+              Create Mock Route
+            </Button>
           </div>
         ) : (
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 uppercase font-mono text-[11px]">
-                <th className="py-3 px-4">Method & Path</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Latency</th>
-                <th className="py-3 px-4">Chaos</th>
-                <th className="py-3 px-4">Type</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60">
-              {filteredRoutes.map((route, idx) => (
-                <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="py-3 px-4">
-                    <div className="flex items-center space-x-2.5">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${getMethodBadgeClass(route.method)}`}>
-                        {route.method}
-                      </span>
-                      <span className="font-mono text-slate-200 text-xs font-medium">
-                        {route.path}
-                      </span>
-                    </div>
-                  </td>
-
-                  <td className="py-3 px-4 font-mono text-slate-300">
-                    <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[11px]">
-                      {route.statusCode}
-                    </span>
-                  </td>
-
-                  <td className="py-3 px-4 font-mono text-slate-400">
-                    <div className="flex items-center space-x-1.5">
-                      <Sliders className="w-3.5 h-3.5 text-slate-500" />
-                      <span>{route.latencyMs || 0} ms</span>
-                    </div>
-                  </td>
-
-                  <td className="py-3 px-4 font-mono text-slate-400">
-                    {route.failureRatePercent > 0 ? (
-                      <span className="text-amber-400 flex items-center space-x-1">
-                        <AlertTriangle className="w-3.5 h-3.5" />
-                        <span>{route.failureRatePercent}%</span>
-                      </span>
-                    ) : (
-                      <span className="text-slate-600">0%</span>
-                    )}
-                  </td>
-
-                  <td className="py-3 px-4">
-                    {route.isEcho ? (
-                      <span className="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[10px] font-mono">
-                        Echo Mode
-                      </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px] font-mono">
-                        Template
-                      </span>
-                    )}
-                  </td>
-
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end space-x-2">
-                      <button
-                        onClick={() => onConnectCode(route)}
-                        className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-emerald-400 font-medium text-xs flex items-center space-x-1 border border-slate-700 transition-colors"
-                        title="Generate Frontend Integration Code"
-                      >
-                        <Code2 className="w-3.5 h-3.5" />
-                        <span>Connect</span>
-                      </button>
-
-                      <button
-                        onClick={() => onEditRoute(route)}
-                        className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
-                        title="Edit Route"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          const routeSK = route.SK || `ROUTE#${route.method}#${route.path}`;
-                          if (confirm(`Delete route [${route.method}] ${route.path}?`)) {
-                            onDeleteRoute(routeSK);
-                          }
-                        }}
-                        className="p-1.5 rounded bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 border border-slate-700 transition-colors"
-                        title="Delete Route"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-white/10 bg-[#121213] text-[#86868b] uppercase font-mono text-[10px] tracking-wider">
+                  <th className="py-3.5 px-4 font-medium">Method & Path</th>
+                  <th className="py-3.5 px-4 font-medium">Status</th>
+                  <th className="py-3.5 px-4 font-medium">Latency</th>
+                  <th className="py-3.5 px-4 font-medium">Chaos</th>
+                  <th className="py-3.5 px-4 font-medium">Mode</th>
+                  <th className="py-3.5 px-4 font-medium text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {filteredRoutes.map((route, idx) => (
+                  <tr key={idx} className="hover:bg-white/[0.03] transition-colors">
+                    {/* Method & Path */}
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center space-x-2.5">
+                        <Badge method={route.method} size="sm" />
+                        <span className="font-mono text-[#f5f5f7] text-xs font-medium">
+                          {route.path}
+                        </span>
+                        <button
+                          onClick={() => handleCopyPath(route.path)}
+                          className="text-[#86868b] hover:text-white p-1 rounded-full transition-colors"
+                          title="Copy path"
+                        >
+                          {copiedPath === route.path ? (
+                            <Check className="w-3 h-3 text-[#30d158]" />
+                          ) : (
+                            <Copy className="w-3 h-3 opacity-60" />
+                          )}
+                        </button>
+                      </div>
+                    </td>
+
+                    {/* Status code */}
+                    <td className="py-3.5 px-4">
+                      <Badge statusCode={route.statusCode} size="sm" />
+                    </td>
+
+                    {/* Latency */}
+                    <td className="py-3.5 px-4 font-mono text-[#a1a1a6]">
+                      <div className="flex items-center space-x-1.5">
+                        <Sliders className="w-3.5 h-3.5 text-[#86868b]" />
+                        <span>{route.latencyMs || 0} ms</span>
+                      </div>
+                    </td>
+
+                    {/* Chaos failure rate */}
+                    <td className="py-3.5 px-4 font-mono">
+                      {route.failureRatePercent > 0 ? (
+                        <span className="text-[#ff9f0a] flex items-center space-x-1">
+                          <AlertTriangle className="w-3.5 h-3.5" />
+                          <span>{route.failureRatePercent}%</span>
+                        </span>
+                      ) : (
+                        <span className="text-[#6e6e73]">0%</span>
+                      )}
+                    </td>
+
+                    {/* Mode (Echo vs Template) */}
+                    <td className="py-3.5 px-4">
+                      {route.isEcho ? (
+                        <span className="px-2.5 py-0.5 rounded-full bg-[#64d2ff]/15 text-[#64d2ff] border border-[#64d2ff]/30 text-[10px] font-mono font-medium">
+                          Echo Mode
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-[#a1a1a6] border border-white/10 text-[10px] font-mono">
+                          JSON Template
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Action buttons */}
+                    <td className="py-3.5 px-4 text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
+                        <Button
+                          variant="secondary"
+                          size="xs"
+                          icon={<Code2 className="w-3 h-3 text-[#2997ff]" />}
+                          onClick={() => onConnectCode(route)}
+                          title="Generate Frontend Integration Code"
+                        >
+                          Connect
+                        </Button>
+
+                        <button
+                          onClick={() => onEditRoute(route)}
+                          className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-[#a1a1a6] hover:text-white border border-white/10 transition-colors"
+                          title="Edit Route"
+                        >
+                          <Edit2 className="w-3 h-3" />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            const routeSK = route.SK || `ROUTE#${route.method}#${route.path}`;
+                            if (confirm(`Delete mock endpoint [${route.method}] ${route.path}?`)) {
+                              onDeleteRoute(routeSK);
+                            }
+                          }}
+                          className="p-1.5 rounded-full bg-white/5 hover:bg-red-500/20 text-[#a1a1a6] hover:text-[#ff453a] border border-white/10 transition-colors"
+                          title="Delete Route"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>
   );
 };
-

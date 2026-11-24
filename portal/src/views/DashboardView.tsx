@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Terminal, 
   Layers, 
   Network, 
   Server, 
   Activity, 
   History, 
-  ArrowRight, 
   Plus, 
   FileUp, 
-  CheckCircle2, 
+  Play, 
   Clock, 
   Zap, 
-  Play,
-  Key
+  CheckCircle2, 
+  ChevronRight
 } from 'lucide-react';
 import { Project, MockRoute, EnvironmentType, User } from '../types.js';
+import { Button } from '../components/ui/Button.js';
+import { Badge } from '../components/ui/Badge.js';
 
 interface DashboardViewProps {
   user: User;
@@ -67,199 +67,222 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Welcome Hero Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl relative overflow-hidden">
-        <div className="absolute right-0 top-0 bottom-0 w-96 bg-gradient-to-l from-emerald-500/10 to-transparent pointer-events-none" />
+      {/* Welcome Hero Banner — Apple styling */}
+      <div className="bg-[#161617] p-6 sm:p-8 rounded-3xl border border-white/10 shadow-apple-sm relative overflow-hidden">
+        <div className="max-w-2xl relative z-10">
+          <div className="inline-flex items-center gap-2 text-xs font-mono text-[#a1a1a6] bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-3">
+            <span>Project</span>
+            <span className="text-[#86868b]">&bull;</span>
+            <span className="text-white font-medium">{activeProject?.name || 'Default Project'}</span>
+          </div>
 
-        <div className="relative z-10 max-w-2xl">
-          <span className="text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-semibold">
-            Pseudoend Platform 2.0
-          </span>
-          <h1 className="text-2xl font-bold text-white tracking-tight mt-2">
-            Welcome, {user.email.split('@')[0]}
-          </h1>
-          <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-            Your active project <strong className="text-slate-200">{activeProject?.name || 'Default Project'}</strong> is running in the <strong className="text-emerald-400 uppercase font-mono">{activeEnvironment}</strong> environment.
+          <h2 className="text-2xl sm:text-3xl font-semibold text-[#f5f5f7] tracking-tight">
+            Developer Studio
+          </h2>
+          <p className="text-xs sm:text-sm text-[#a1a1a6] mt-2 leading-relaxed">
+            Running in the <strong className="text-[#2997ff] uppercase font-mono">{activeEnvironment}</strong> environment. Configure mock routes, generate relational schemas, simulate latency, and test live frontend components.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 mt-4">
-            <button
+          <div className="flex flex-wrap items-center gap-3 mt-6">
+            <Button
+              variant="primary"
+              size="md"
+              icon={<Plus className="w-4 h-4" />}
               onClick={onOpenNewRoute}
-              className="flex items-center space-x-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-3.5 py-2 rounded-lg text-xs font-semibold shadow-lg shadow-emerald-500/10 transition-colors"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Create Mock Route</span>
-            </button>
-            <button
+              New Mock Route
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              icon={<FileUp className="w-4 h-4 text-[#bf5af2]" />}
               onClick={() => onNavigate('import')}
-              className="flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-lg text-xs font-medium transition-colors"
             >
-              <FileUp className="w-3.5 h-3.5 text-blue-400" />
-              <span>Import OpenAPI</span>
-            </button>
-            <button
+              Import OpenAPI
+            </Button>
+            <Button
+              variant="outline"
+              size="md"
+              icon={<Play className="w-4 h-4 text-[#2997ff] fill-current" />}
               onClick={() => onNavigate('testing')}
-              className="flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-lg text-xs font-medium transition-colors"
             >
-              <Play className="w-3.5 h-3.5 text-emerald-400 fill-current" />
-              <span>Run Health Check</span>
-            </button>
+              Run Health Check
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* 4 Overview Metric Cards */}
+      {/* 4 Metric KPI Cards — Apple style */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div 
           onClick={() => onNavigate('studio')}
-          className="bg-slate-900/60 hover:bg-slate-900 border border-slate-800 p-4 rounded-xl cursor-pointer transition-colors backdrop-blur-sm"
+          className="bg-[#161617] hover:bg-[#1c1c1e] border border-white/10 hover:border-white/20 p-5 rounded-2xl cursor-pointer transition-all shadow-apple-sm group"
         >
-          <div className="flex items-center justify-between text-slate-400 mb-2">
+          <div className="flex items-center justify-between text-[#86868b] mb-2">
             <span className="text-xs font-medium">Mock Endpoints</span>
-            <Layers className="w-4 h-4 text-emerald-400" />
+            <Layers className="w-4 h-4 text-[#2997ff] group-hover:scale-110 transition-transform" />
           </div>
-          <div className="text-2xl font-bold font-mono text-white">{routes.length}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Configured routes</div>
+          <div className="text-2xl font-bold font-mono text-white tracking-tight">{routes.length}</div>
+          <div className="text-[11px] text-[#86868b] mt-1 flex items-center justify-between">
+            <span>Configured routes</span>
+            <span className="text-[#2997ff] text-[11px] group-hover:translate-x-0.5 transition-transform flex items-center">
+              Studio <ChevronRight className="w-3 h-3 ml-0.5" />
+            </span>
+          </div>
         </div>
 
         <div 
           onClick={() => onNavigate('environments')}
-          className="bg-slate-900/60 hover:bg-slate-900 border border-slate-800 p-4 rounded-xl cursor-pointer transition-colors backdrop-blur-sm"
+          className="bg-[#161617] hover:bg-[#1c1c1e] border border-white/10 hover:border-white/20 p-5 rounded-2xl cursor-pointer transition-all shadow-apple-sm group"
         >
-          <div className="flex items-center justify-between text-slate-400 mb-2">
+          <div className="flex items-center justify-between text-[#86868b] mb-2">
             <span className="text-xs font-medium">Active Environment</span>
-            <Server className="w-4 h-4 text-blue-400" />
+            <Server className="w-4 h-4 text-[#64d2ff] group-hover:scale-110 transition-transform" />
           </div>
-          <div className="text-xl font-bold font-mono text-emerald-400 uppercase mt-0.5">{activeEnvironment}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Zero cross-bleed isolation</div>
+          <div className="text-xl font-bold font-mono text-[#2997ff] uppercase tracking-tight">{activeEnvironment}</div>
+          <div className="text-[11px] text-[#86868b] mt-1 flex items-center justify-between">
+            <span>Zero data cross-bleed</span>
+            <span className="text-[#64d2ff] text-[11px] group-hover:translate-x-0.5 transition-transform flex items-center">
+              Switch <ChevronRight className="w-3 h-3 ml-0.5" />
+            </span>
+          </div>
         </div>
 
         <div 
           onClick={() => onNavigate('testing')}
-          className="bg-slate-900/60 hover:bg-slate-900 border border-slate-800 p-4 rounded-xl cursor-pointer transition-colors backdrop-blur-sm"
+          className="bg-[#161617] hover:bg-[#1c1c1e] border border-white/10 hover:border-white/20 p-5 rounded-2xl cursor-pointer transition-all shadow-apple-sm group"
         >
-          <div className="flex items-center justify-between text-slate-400 mb-2">
+          <div className="flex items-center justify-between text-[#86868b] mb-2">
             <span className="text-xs font-medium">API Health Score</span>
-            <Activity className="w-4 h-4 text-cyan-400" />
+            <Activity className="w-4 h-4 text-[#30d158] group-hover:scale-110 transition-transform" />
           </div>
-          <div className="text-2xl font-bold font-mono text-cyan-400">{healthScore}%</div>
-          <div className="text-[11px] text-slate-500 mt-1">
-            {latestReport ? `${latestReport.passed}/${latestReport.totalTests} tests passed` : 'No test runs yet'}
+          <div className="text-2xl font-bold font-mono text-[#30d158] tracking-tight">{healthScore}%</div>
+          <div className="text-[11px] text-[#86868b] mt-1 flex items-center justify-between">
+            <span>{latestReport ? `${latestReport.passed}/${latestReport.totalTests} tests passed` : 'No runs yet'}</span>
+            <span className="text-[#30d158] text-[11px] group-hover:translate-x-0.5 transition-transform flex items-center">
+              Test <ChevronRight className="w-3 h-3 ml-0.5" />
+            </span>
           </div>
         </div>
 
         <div 
           onClick={() => onNavigate('relationships')}
-          className="bg-slate-900/60 hover:bg-slate-900 border border-slate-800 p-4 rounded-xl cursor-pointer transition-colors backdrop-blur-sm"
+          className="bg-[#161617] hover:bg-[#1c1c1e] border border-white/10 hover:border-white/20 p-5 rounded-2xl cursor-pointer transition-all shadow-apple-sm group"
         >
-          <div className="flex items-center justify-between text-slate-400 mb-2">
+          <div className="flex items-center justify-between text-[#86868b] mb-2">
             <span className="text-xs font-medium">Data Relationships</span>
-            <Network className="w-4 h-4 text-purple-400" />
+            <Network className="w-4 h-4 text-[#bf5af2] group-hover:scale-110 transition-transform" />
           </div>
-          <div className="text-xl font-bold text-purple-400">Smart Graph</div>
-          <div className="text-[11px] text-slate-500 mt-1">1:1 & 1:N foreign keys</div>
+          <div className="text-xl font-bold text-[#bf5af2] tracking-tight">Smart Graph</div>
+          <div className="text-[11px] text-[#86868b] mt-1 flex items-center justify-between">
+            <span>1:1 & 1:N foreign keys</span>
+            <span className="text-[#bf5af2] text-[11px] group-hover:translate-x-0.5 transition-transform flex items-center">
+              Graph <ChevronRight className="w-3 h-3 ml-0.5" />
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Two Column Layout: Workflow + Recent Logs */}
+      {/* Two Column Layout: Workflow Stepper + Live Activity Feed */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Workflow Guide */}
-        <div className="lg:col-span-2 bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wider">
-              Pseudoend End-to-End Developer Workflow
+        
+        {/* Workflow Guide (2 cols) */}
+        <div className="lg:col-span-2 bg-[#161617] border border-white/10 rounded-3xl p-6 shadow-apple-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-white/10">
+            <h3 className="text-xs font-semibold text-[#f5f5f7] uppercase tracking-wider font-mono">
+              Pseudoend End-to-End Workflow
             </h3>
-            <span className="text-[10px] text-emerald-400 font-mono">GENERATE &rarr; SIMULATE &rarr; TEST &rarr; TIME-TRAVEL</span>
+            <span className="text-[11px] text-[#2997ff] font-mono font-medium">
+              GENERATE &bull; RELATE &bull; SIMULATE &bull; REPLAY
+            </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div 
               onClick={() => onNavigate('import')}
-              className="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 hover:border-slate-700 cursor-pointer transition-colors"
+              className="bg-[#1c1c1e] p-4 rounded-2xl border border-white/5 hover:border-white/20 cursor-pointer transition-all group"
             >
-              <div className="flex items-center space-x-2 text-white font-semibold mb-1">
-                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[11px] font-bold">1</span>
-                <span>Import or Generate APIs</span>
+              <div className="flex items-center space-x-2.5 text-white font-medium mb-1.5">
+                <span className="w-5 h-5 rounded-full bg-[#0071e3]/20 text-[#2997ff] flex items-center justify-center text-[10px] font-bold font-mono">1</span>
+                <span className="group-hover:text-[#2997ff] transition-colors">Import or Generate APIs</span>
               </div>
-              <p className="text-[11px] text-slate-400">
-                Upload your Swagger or OpenAPI specification or create endpoints in Mock Studio.
+              <p className="text-[11px] text-[#a1a1a6] leading-relaxed">
+                Upload your OpenAPI / Swagger schema or build custom mock endpoints in Mock Studio.
               </p>
             </div>
 
             <div 
               onClick={() => onNavigate('relationships')}
-              className="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 hover:border-slate-700 cursor-pointer transition-colors"
+              className="bg-[#1c1c1e] p-4 rounded-2xl border border-white/5 hover:border-white/20 cursor-pointer transition-all group"
             >
-              <div className="flex items-center space-x-2 text-white font-semibold mb-1">
-                <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-[11px] font-bold">2</span>
-                <span>Connect Relationships</span>
+              <div className="flex items-center space-x-2.5 text-white font-medium mb-1.5">
+                <span className="w-5 h-5 rounded-full bg-[#bf5af2]/20 text-[#bf5af2] flex items-center justify-center text-[10px] font-bold font-mono">2</span>
+                <span className="group-hover:text-[#bf5af2] transition-colors">Connect Relationships</span>
               </div>
-              <p className="text-[11px] text-slate-400">
-                Auto-detect 1:1 and 1:N relations and seed realistic interconnected data.
+              <p className="text-[11px] text-[#a1a1a6] leading-relaxed">
+                Auto-detect 1:1 and 1:N connections and seed realistic referential data across entities.
               </p>
             </div>
 
             <div 
               onClick={() => onNavigate('environments')}
-              className="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 hover:border-slate-700 cursor-pointer transition-colors"
+              className="bg-[#1c1c1e] p-4 rounded-2xl border border-white/5 hover:border-white/20 cursor-pointer transition-all group"
             >
-              <div className="flex items-center space-x-2 text-white font-semibold mb-1">
-                <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-[11px] font-bold">3</span>
-                <span>Switch Environments</span>
+              <div className="flex items-center space-x-2.5 text-white font-medium mb-1.5">
+                <span className="w-5 h-5 rounded-full bg-[#64d2ff]/20 text-[#64d2ff] flex items-center justify-center text-[10px] font-bold font-mono">3</span>
+                <span className="group-hover:text-[#64d2ff] transition-colors">Switch Environments</span>
               </div>
-              <p className="text-[11px] text-slate-400">
-                Isolate states across Sandbox, Dev, Staging, and Live with custom chaos profiles.
+              <p className="text-[11px] text-[#a1a1a6] leading-relaxed">
+                Isolate states across Sandbox, Dev, Staging, and Live with custom chaos fault injection.
               </p>
             </div>
 
             <div 
               onClick={() => onNavigate('timetravel')}
-              className="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 hover:border-slate-700 cursor-pointer transition-colors"
+              className="bg-[#1c1c1e] p-4 rounded-2xl border border-white/5 hover:border-white/20 cursor-pointer transition-all group"
             >
-              <div className="flex items-center space-x-2 text-white font-semibold mb-1">
-                <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-[11px] font-bold">4</span>
-                <span>Time-Travel & Replay</span>
+              <div className="flex items-center space-x-2.5 text-white font-medium mb-1.5">
+                <span className="w-5 h-5 rounded-full bg-[#ff9f0a]/20 text-[#ff9f0a] flex items-center justify-center text-[10px] font-bold font-mono">4</span>
+                <span className="group-hover:text-[#ff9f0a] transition-colors">Time-Travel & Replay</span>
               </div>
-              <p className="text-[11px] text-slate-400">
-                Capture snapshots, restore previous states, and replay historical API requests.
+              <p className="text-[11px] text-[#a1a1a6] leading-relaxed">
+                Capture checkpoints, compute diffs, restore states, and replay recorded API requests.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Recent Request Feed */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-sm flex flex-col justify-between">
+        {/* Live Activity Feed (1 col) */}
+        <div className="bg-[#161617] border border-white/10 rounded-3xl p-6 shadow-apple-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Live Activity Feed</h3>
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3">
+              <h3 className="text-xs font-semibold text-[#f5f5f7] uppercase tracking-wider font-mono">
+                Recent Activity
+              </h3>
               <button 
                 onClick={() => onNavigate('timetravel')}
-                className="text-[11px] text-emerald-400 hover:text-emerald-300 font-mono"
+                className="text-[11px] text-[#2997ff] hover:text-[#0077ed] font-medium transition-colors"
               >
                 View all &rarr;
               </button>
             </div>
 
             {recentLogs.length === 0 ? (
-              <p className="text-xs text-slate-500 text-center py-8 font-mono">No requests logged yet.</p>
+              <div className="text-center py-10 text-xs text-[#86868b] font-mono">
+                No requests recorded in this environment yet.
+              </div>
             ) : (
               <div className="space-y-2">
                 {recentLogs.map((log) => (
-                  <div key={log.id} className="bg-slate-950 p-2.5 rounded-lg border border-slate-800/80 text-xs font-mono">
+                  <div key={log.id} className="bg-[#1c1c1e] p-3 rounded-2xl border border-white/5 text-xs font-mono">
                     <div className="flex items-center justify-between mb-1">
-                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                        log.method === 'GET' ? 'bg-emerald-500/10 text-emerald-400' :
-                        log.method === 'POST' ? 'bg-blue-500/10 text-blue-400' :
-                        'bg-red-500/10 text-red-400'
-                      }`}>
-                        {log.method}
-                      </span>
-                      <span className={`font-bold ${log.status < 400 ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {log.status}
-                      </span>
+                      <Badge method={log.method} size="sm" />
+                      <Badge statusCode={log.status} size="sm" />
                     </div>
-                    <div className="text-[11px] text-slate-300 truncate">{log.endpoint}</div>
-                    <div className="text-[10px] text-slate-500 mt-1 flex justify-between">
+                    <div className="text-[11px] text-[#d2d2d7] truncate" title={log.endpoint}>
+                      {log.endpoint}
+                    </div>
+                    <div className="text-[10px] text-[#86868b] mt-1 flex justify-between">
                       <span>{new Date(log.timestamp).toLocaleTimeString()}</span>
                       <span>{log.durationMs}ms</span>
                     </div>
@@ -269,6 +292,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             )}
           </div>
         </div>
+
       </div>
     </div>
   );

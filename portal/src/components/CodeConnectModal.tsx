@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Copy, Check, Terminal } from 'lucide-react';
+import { Copy, Check, Terminal } from 'lucide-react';
 import { MockRoute } from '../types.js';
+import { Modal } from './ui/Modal.js';
 
 interface CodeConnectModalProps {
   isOpen: boolean;
@@ -196,63 +197,60 @@ curl -X ${route.method} "${fullUrl}" \\
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-3xl w-full p-6 shadow-2xl relative">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-slate-400 hover:text-white p-1 rounded-lg"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center space-x-2.5 mb-1">
-          <Terminal className="w-5 h-5 text-emerald-400" />
-          <h3 className="text-lg font-bold text-white">Connect to Frontend Code</h3>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={
+        <div className="flex items-center gap-2">
+          <Terminal className="w-5 h-5 text-[#2997ff]" />
+          <span>Connect to Client Code</span>
         </div>
-        <p className="text-xs text-slate-400 mb-5">
-          Copy pre-configured client code for <strong>[{route.method}] {route.path}</strong> into your frontend project.
-        </p>
-
-        {/* Framework Tabs */}
-        <div className="flex flex-wrap gap-1.5 border-b border-slate-800 pb-3 mb-4 text-xs font-medium">
-          {[
-            { id: 'react', label: 'React (Fetch)' },
-            { id: 'react-query', label: 'TanStack Query' },
-            { id: 'vue', label: 'Vue 3' },
-            { id: 'svelte', label: 'Svelte' },
-            { id: 'flutter', label: 'Flutter (Dart)' },
-            { id: 'swift', label: 'iOS (Swift)' },
-            { id: 'curl', label: 'cURL / Terminal' }
-          ].map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id as any)}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${
-                tab === t.id
-                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Code Block */}
-        <div className="relative">
+      }
+      description={
+        <span>
+          Pre-configured snippet for <strong className="text-white font-mono">[{route.method}] {route.path}</strong> with your project authentication headers.
+        </span>
+      }
+      maxWidth="3xl"
+    >
+      {/* Framework Tabs */}
+      <div className="flex flex-wrap gap-1.5 border-b border-white/5 pb-3 mb-4 text-xs font-medium">
+        {[
+          { id: 'react', label: 'React (Fetch)' },
+          { id: 'react-query', label: 'TanStack Query' },
+          { id: 'vue', label: 'Vue 3' },
+          { id: 'svelte', label: 'Svelte' },
+          { id: 'flutter', label: 'Flutter (Dart)' },
+          { id: 'swift', label: 'iOS (Swift)' },
+          { id: 'curl', label: 'cURL / CLI' }
+        ].map((t) => (
           <button
-            onClick={handleCopy}
-            className="absolute top-3 right-3 flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-md text-xs font-medium border border-slate-700 transition-colors"
+            key={t.id}
+            onClick={() => setTab(t.id as any)}
+            className={`px-3.5 py-1.5 rounded-full transition-all text-xs font-medium ${
+              tab === t.id
+                ? 'bg-[#0071e3] text-white font-semibold shadow-sm'
+                : 'text-[#86868b] hover:text-white hover:bg-white/5'
+            }`}
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? 'Copied!' : 'Copy Code'}</span>
+            {t.label}
           </button>
-          <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 pt-11 text-xs font-mono text-emerald-300 overflow-x-auto max-h-[380px]">
-            {snippets[tab]}
-          </pre>
-        </div>
+        ))}
       </div>
-    </div>
+
+      {/* Code snippet block */}
+      <div className="relative">
+        <button
+          onClick={handleCopy}
+          className="absolute top-3 right-3 flex items-center space-x-1.5 bg-[#1c1c1e] hover:bg-[#2c2c2e] text-[#f5f5f7] px-3 py-1.5 rounded-full text-xs font-medium border border-white/10 transition-colors z-10"
+        >
+          {copied ? <Check className="w-3.5 h-3.5 text-[#30d158]" /> : <Copy className="w-3.5 h-3.5" />}
+          <span>{copied ? 'Copied to Clipboard!' : 'Copy Code'}</span>
+        </button>
+        <pre className="bg-[#000000] border border-white/10 rounded-2xl p-5 pt-12 text-xs font-mono text-[#f5f5f7] overflow-x-auto max-h-[380px] leading-relaxed">
+          {snippets[tab]}
+        </pre>
+      </div>
+    </Modal>
   );
 };
-

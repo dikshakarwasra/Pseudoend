@@ -4,6 +4,7 @@ import { Header, PortalTab } from './components/Header.js';
 import { RouteModal } from './components/RouteModal.js';
 import { CodeConnectModal } from './components/CodeConnectModal.js';
 import { QuotaRequestModal } from './components/QuotaRequestModal.js';
+import { ToastProvider, useToast } from './components/ui/Toast.js';
 import { AuthView } from './views/AuthView.js';
 import { DashboardView } from './views/DashboardView.js';
 import { MockStudioView } from './views/MockStudioView.js';
@@ -17,7 +18,19 @@ import { AdminConsoleView } from './views/AdminConsoleView.js';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://8dbk9yr376.execute-api.us-east-1.amazonaws.com';
 
-export function App() {
+const TAB_TITLES: Record<PortalTab, { title: string; subtitle: string }> = {
+  dashboard: { title: 'Dashboard', subtitle: 'Project metrics and platform overview' },
+  studio: { title: 'Mock Studio', subtitle: 'Manage mock endpoints, latency, and response bodies' },
+  relationships: { title: 'Data Relationships', subtitle: 'Visual schema graph and relational integrity' },
+  environments: { title: 'Environments', subtitle: 'Isolated sandbox, dev, staging, and live database states' },
+  testing: { title: 'Health & Testing', subtitle: 'Automated end-to-end diagnostics and benchmark reports' },
+  timetravel: { title: 'Time-Travel & Replay', subtitle: 'Database state checkpoints, diffs, and request replay' },
+  import: { title: 'Import API', subtitle: 'OpenAPI 3.0 blueprint importer and schema generation' },
+  inspector: { title: 'Live Inspector', subtitle: 'Interactive live request runner and response inspector' },
+  admin: { title: 'Admin Console', subtitle: 'Cloud usage governance and quota upgrade review' }
+};
+
+function AppContent() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('pseudoend_token') || localStorage.getItem('sudoend_token'));
   const [user, setUser] = useState<User | null>(() => {
     const cached = localStorage.getItem('pseudoend_user') || localStorage.getItem('sudoend_user');
@@ -35,6 +48,8 @@ export function App() {
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const [connectRoute, setConnectRoute] = useState<MockRoute | null>(null);
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false);
+
+  const { success, error } = useToast();
 
   // Fetch projects upon login
   const fetchProjectsAndUser = async (authToken: string) => {
@@ -95,6 +110,7 @@ export function App() {
     localStorage.setItem('pseudoend_user', JSON.stringify(newUser));
     localStorage.removeItem('sudoend_token');
     localStorage.removeItem('sudoend_user');
+    success('Welcome to Pseudoend');
     if (initialProject) {
       setProjects([initialProject]);
       setActiveProject(initialProject);
@@ -125,7 +141,7 @@ export function App() {
         });
         handleLogout();
       } catch (err) {
-        alert('Failed to delete account.');
+        error('Failed to delete account.');
       }
     }
   };
@@ -146,6 +162,8 @@ export function App() {
       throw new Error(err.message || 'Failed to save route');
     }
 
+    success('Mock endpoint saved successfully.');
+
     if (activeProject) {
       fetchRoutes(activeProject.id, token);
     }
@@ -159,8 +177,10 @@ export function App() {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
+      success('Mock endpoint deleted.');
       fetchRoutes(activeProject.id, token);
     } catch (err) {
+      error('Failed to delete route.');
       console.error('Failed to delete route:', err);
     }
   };
@@ -180,14 +200,19 @@ export function App() {
       const err = await res.json();
       throw new Error(err.message || 'Failed to submit request');
     }
+
+    success('Quota upgrade request submitted.');
   };
 
   if (!token || !user) {
     return <AuthView onAuthSuccess={handleAuthSuccess} apiBaseUrl={API_BASE_URL} />;
   }
 
+  const currentMeta = TAB_TITLES[activeTab] || TAB_TITLES.dashboard;
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-black text-[#f5f5f7] flex flex-col md:flex-row font-sans selection:bg-[#0071e3] selection:text-white">
+      {/* Vertical Sidebar Navigation */}
       <Header
         user={user}
         activeProject={activeProject}
@@ -200,97 +225,115 @@ export function App() {
         onDeleteAccount={handleDeleteAccount}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6">
-        {activeTab === 'dashboard' && (
-          <DashboardView
-            user={user}
-            activeProject={activeProject}
-            routes={routes}
-            activeEnvironment={activeEnvironment}
-            apiBaseUrl={API_BASE_URL}
-            token={token}
-            onNavigate={(t) => setActiveTab(t)}
-            onOpenNewRoute={() => { setEditingRoute(null); setIsRouteModalOpen(true); }}
-          />
-        )}
+      {/* Main Workspace Area */}
+      <div className="flex-1 min-w-0 flex flex-col min-h-screen bg-[#000000]">
+        {/* Subtle Workspace Header Bar */}
+        <header className="hidden md:flex items-center justify-between px-6 lg:px-8 h-14 border-b border-white/10 bg-[#121213]/60 backdrop-blur-xl sticky top-0 z-20">
+          <div>
+            <h1 className="text-sm font-semibold text-[#f5f5f7] tracking-tight">{currentMeta.title}</h1>
+            <p className="text-[11px] text-[#86868b]">{currentMeta.subtitle}</p>
+          </div>
 
-        {activeTab === 'studio' && (
-          <MockStudioView
-            routes={routes}
-            activeProject={activeProject}
-            apiBaseUrl={API_BASE_URL}
-            onOpenNewRoute={() => { setEditingRoute(null); setIsRouteModalOpen(true); }}
-            onEditRoute={(r) => { setEditingRoute(r); setIsRouteModalOpen(true); }}
-            onDeleteRoute={handleDeleteRoute}
-            onConnectCode={(r) => { setConnectRoute(r); setIsConnectModalOpen(true); }}
-            onRefresh={() => activeProject && fetchRoutes(activeProject.id, token)}
-          />
-        )}
+          <div className="flex items-center space-x-3 text-xs">
+            <span className="text-[#86868b] font-mono">
+              Project: <strong className="text-[#d2d2d7]">{activeProject?.name || 'Default Project'}</strong>
+            </span>
+          </div>
+        </header>
 
-        {activeTab === 'relationships' && (
-          <DataRelationshipsView
-            activeProject={activeProject}
-            apiBaseUrl={API_BASE_URL}
-            token={token}
-            activeEnvironment={activeEnvironment}
-          />
-        )}
+        {/* Workspace Body */}
+        <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+          {activeTab === 'dashboard' && (
+            <DashboardView
+              user={user}
+              activeProject={activeProject}
+              routes={routes}
+              activeEnvironment={activeEnvironment}
+              apiBaseUrl={API_BASE_URL}
+              token={token}
+              onNavigate={(t) => setActiveTab(t)}
+              onOpenNewRoute={() => { setEditingRoute(null); setIsRouteModalOpen(true); }}
+            />
+          )}
 
-        {activeTab === 'environments' && (
-          <EnvironmentsView
-            activeProject={activeProject}
-            apiBaseUrl={API_BASE_URL}
-            token={token}
-            activeEnvironment={activeEnvironment}
-            setActiveEnvironment={setActiveEnvironment}
-          />
-        )}
+          {activeTab === 'studio' && (
+            <MockStudioView
+              routes={routes}
+              activeProject={activeProject}
+              apiBaseUrl={API_BASE_URL}
+              onOpenNewRoute={() => { setEditingRoute(null); setIsRouteModalOpen(true); }}
+              onEditRoute={(r) => { setEditingRoute(r); setIsRouteModalOpen(true); }}
+              onDeleteRoute={handleDeleteRoute}
+              onConnectCode={(r) => { setConnectRoute(r); setIsConnectModalOpen(true); }}
+              onRefresh={() => activeProject && fetchRoutes(activeProject.id, token)}
+            />
+          )}
 
-        {activeTab === 'testing' && (
-          <ApiTestingView
-            activeProject={activeProject}
-            apiBaseUrl={API_BASE_URL}
-            token={token}
-            activeEnvironment={activeEnvironment}
-          />
-        )}
+          {activeTab === 'relationships' && (
+            <DataRelationshipsView
+              activeProject={activeProject}
+              apiBaseUrl={API_BASE_URL}
+              token={token}
+              activeEnvironment={activeEnvironment}
+            />
+          )}
 
-        {activeTab === 'timetravel' && (
-          <TimeTravelView
-            activeProject={activeProject}
-            apiBaseUrl={API_BASE_URL}
-            token={token}
-            activeEnvironment={activeEnvironment}
-          />
-        )}
+          {activeTab === 'environments' && (
+            <EnvironmentsView
+              activeProject={activeProject}
+              apiBaseUrl={API_BASE_URL}
+              token={token}
+              activeEnvironment={activeEnvironment}
+              setActiveEnvironment={setActiveEnvironment}
+            />
+          )}
 
-        {activeTab === 'import' && (
-          <ApiImportView
-            activeProject={activeProject}
-            apiBaseUrl={API_BASE_URL}
-            token={token}
-            activeEnvironment={activeEnvironment}
-            onImportComplete={() => {
-              if (activeProject) fetchRoutes(activeProject.id, token);
-              setActiveTab('studio');
-            }}
-          />
-        )}
+          {activeTab === 'testing' && (
+            <ApiTestingView
+              activeProject={activeProject}
+              apiBaseUrl={API_BASE_URL}
+              token={token}
+              activeEnvironment={activeEnvironment}
+            />
+          )}
 
-        {activeTab === 'inspector' && (
-          <LiveInspectorView
-            activeProject={activeProject}
-            apiBaseUrl={API_BASE_URL}
-          />
-        )}
+          {activeTab === 'timetravel' && (
+            <TimeTravelView
+              activeProject={activeProject}
+              apiBaseUrl={API_BASE_URL}
+              token={token}
+              activeEnvironment={activeEnvironment}
+            />
+          )}
 
-        {activeTab === 'admin' && user.role === 'admin' && (
-          <AdminConsoleView
-            apiBaseUrl={API_BASE_URL}
-            token={token}
-          />
-        )}
-      </main>
+          {activeTab === 'import' && (
+            <ApiImportView
+              activeProject={activeProject}
+              apiBaseUrl={API_BASE_URL}
+              token={token}
+              activeEnvironment={activeEnvironment}
+              onImportComplete={() => {
+                if (activeProject) fetchRoutes(activeProject.id, token);
+                setActiveTab('studio');
+              }}
+            />
+          )}
+
+          {activeTab === 'inspector' && (
+            <LiveInspectorView
+              activeProject={activeProject}
+              apiBaseUrl={API_BASE_URL}
+            />
+          )}
+
+          {activeTab === 'admin' && user.role === 'admin' && (
+            <AdminConsoleView
+              apiBaseUrl={API_BASE_URL}
+              token={token}
+            />
+          )}
+        </main>
+      </div>
 
       {/* Modals */}
       <RouteModal
@@ -320,5 +363,12 @@ export function App() {
   );
 }
 
-export default App;
+export function App() {
+  return (
+    <ToastProvider>
+      <AppContent />
+    </ToastProvider>
+  );
+}
 
+export default App;

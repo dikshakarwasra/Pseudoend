@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Terminal, ShieldCheck, Zap, Server, ArrowRight } from 'lucide-react';
+import { Terminal, ShieldCheck, Zap, Server, ArrowRight, Eye, EyeOff, Code2 } from 'lucide-react';
 import { User, Project } from '../types.js';
+import { Button } from '../components/ui/Button.js';
+import { Input } from '../components/ui/Input.js';
 
 interface AuthViewProps {
   onAuthSuccess: (token: string, user: User, initialProject?: Project) => void;
@@ -11,11 +13,14 @@ export const AuthView: React.FC<AuthViewProps> = ({ onAuthSuccess, apiBaseUrl })
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim() || !password) return;
+
     setLoading(true);
     setError(null);
 
@@ -52,116 +57,173 @@ export const AuthView: React.FC<AuthViewProps> = ({ onAuthSuccess, apiBaseUrl })
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
-      <div className="max-w-4xl w-full grid md:grid-cols-2 bg-slate-900/80 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
-        {/* Left Side: Brand & Value Prop */}
-        <div className="p-8 md:p-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800 bg-slate-950/40">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-black text-[#f5f5f7] relative overflow-hidden">
+      {/* Subtle Apple blue ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[300px] bg-[#0071e3]/10 blur-[140px] rounded-full pointer-events-none" />
+
+      <div className="max-w-4xl w-full grid md:grid-cols-12 bg-[#161617] border border-white/10 rounded-3xl shadow-apple-md overflow-hidden backdrop-blur-xl relative z-10">
+        
+        {/* Left Side: Brand & Product Value (5 cols) */}
+        <div className="md:col-span-5 p-7 sm:p-9 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10 bg-[#121213]">
           <div>
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                <Terminal className="w-6 h-6" />
+            {/* Logo — NO 2.0 */}
+            <div className="flex items-center space-x-2.5 mb-7">
+              <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white">
+                <Terminal className="w-4 h-4" />
               </div>
-              <span className="font-bold text-2xl tracking-tight text-white">Pseudoend</span>
+              <span className="font-bold text-lg tracking-tight text-white font-mono">
+                PSEUDOEND
+              </span>
             </div>
 
-            <h2 className="text-xl font-bold text-white mb-2 leading-snug">
-              Instant Mock Backends for Frontend Engineers
-            </h2>
-            <p className="text-sm text-slate-400 mb-8 leading-relaxed">
-              Test and build web and mobile frontends instantly with serverless mock endpoints, dynamic Faker templates, network latency simulators, and echo handlers.
+            <h1 className="text-xl sm:text-2xl font-semibold text-[#f5f5f7] mb-2.5 leading-snug tracking-tight">
+              Intelligent Fake Server Generator
+            </h1>
+            <p className="text-xs text-[#a1a1a6] mb-7 leading-relaxed">
+              Build and test frontends without waiting for backend teams. Ephemeral serverless endpoints with dynamic schemas, chaos engineering, and instant OpenAPI import.
             </p>
 
-            <div className="space-y-3.5">
-              <div className="flex items-center space-x-3 text-xs text-slate-300">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>100% Free Forever — Zero Credit Card Required</span>
+            {/* Feature Bullets */}
+            <div className="space-y-3.5 pt-1">
+              <div className="flex items-start space-x-3 text-xs text-[#d2d2d7]">
+                <ShieldCheck className="w-4 h-4 text-[#2997ff] shrink-0 mt-0.5" />
+                <span><strong>100% Free Forever</strong> &mdash; Zero credit card or billing setup required</span>
               </div>
-              <div className="flex items-center space-x-3 text-xs text-slate-300">
-                <Zap className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                <span>Pay-per-request Serverless with $0.00 Idle Cost</span>
+              <div className="flex items-start space-x-3 text-xs text-[#d2d2d7]">
+                <Zap className="w-4 h-4 text-[#ff9f0a] shrink-0 mt-0.5" />
+                <span><strong>Zero-Cost Idle</strong> &mdash; Serverless microsecond response via AWS Lambda</span>
               </div>
-              <div className="flex items-center space-x-3 text-xs text-slate-300">
-                <Server className="w-4 h-4 text-cyan-400 flex-shrink-0" />
-                <span>Language-agnostic: React, Vue, Svelte, iOS, Flutter, cURL</span>
+              <div className="flex items-start space-x-3 text-xs text-[#d2d2d7]">
+                <Server className="w-4 h-4 text-[#bf5af2] shrink-0 mt-0.5" />
+                <span><strong>Multi-Framework</strong> &mdash; Ready-to-copy code for React, Vue, Svelte, iOS, Flutter</span>
               </div>
             </div>
           </div>
 
-          <div className="text-[11px] text-slate-500 font-mono mt-8">
-            Powered by AWS Lambda & DynamoDB Single-Table Architecture
+          {/* Illustrative endpoint snippet preview */}
+          <div className="mt-8 pt-5 border-t border-white/10 font-mono text-[11px] text-[#86868b]">
+            <div className="flex items-center justify-between text-[#a1a1a6] mb-1.5">
+              <span className="text-[10px] uppercase font-semibold flex items-center gap-1.5">
+                <Code2 className="w-3.5 h-3.5 text-[#2997ff]" />
+                <span>Sample Mock Endpoint</span>
+              </span>
+              <span className="text-[10px] text-[#86868b] font-mono">
+                200 OK
+              </span>
+            </div>
+            <div className="bg-[#000000] p-3 rounded-xl border border-white/10 text-[11px] text-[#d2d2d7] overflow-x-auto">
+              <span className="text-[#2997ff] font-bold">GET</span> /mock/:projectId/api/v1/users
+              <div className="text-[#86868b] text-[10px] mt-1 font-sans">Header: x-pseudoend-key &bull; Latency: 40ms</div>
+            </div>
           </div>
         </div>
 
-        {/* Right Side: Auth Form */}
-        <div className="p-8 md:p-10 flex flex-col justify-center">
-          <div className="flex space-x-2 bg-slate-950 p-1 rounded-lg border border-slate-800 mb-6 text-xs font-semibold">
+        {/* Right Side: Authentication Form (7 cols) */}
+        <div className="md:col-span-7 p-7 sm:p-10 flex flex-col justify-center">
+          {/* Sign In / Register Tab Toggle */}
+          <div className="flex p-1 bg-[#000000] rounded-full border border-white/10 mb-7" role="tablist">
             <button
               type="button"
+              role="tab"
+              aria-selected={!isRegister}
               onClick={() => { setIsRegister(false); setError(null); }}
-              className={`flex-1 py-2 rounded-md transition-all ${
-                !isRegister ? 'bg-slate-800 text-white shadow' : 'text-slate-400 hover:text-white'
+              className={`flex-1 py-2 text-xs font-medium rounded-full transition-all ${
+                !isRegister 
+                  ? 'bg-[#2c2c2e] text-white shadow-apple-sm' 
+                  : 'text-[#86868b] hover:text-[#f5f5f7]'
               }`}
             >
               Sign In
             </button>
             <button
               type="button"
+              role="tab"
+              aria-selected={isRegister}
               onClick={() => { setIsRegister(true); setError(null); }}
-              className={`flex-1 py-2 rounded-md transition-all ${
-                isRegister ? 'bg-slate-800 text-white shadow' : 'text-slate-400 hover:text-white'
+              className={`flex-1 py-2 text-xs font-medium rounded-full transition-all ${
+                isRegister 
+                  ? 'bg-[#2c2c2e] text-white shadow-apple-sm' 
+                  : 'text-[#86868b] hover:text-[#f5f5f7]'
               }`}
             >
               Create Account
             </button>
           </div>
 
+          <div className="mb-5">
+            <h2 className="text-lg font-semibold text-white tracking-tight">
+              {isRegister ? 'Create your developer account' : 'Welcome back to Pseudoend'}
+            </h2>
+            <p className="text-xs text-[#a1a1a6] mt-1">
+              {isRegister ? 'Start prototyping instant mock APIs in seconds' : 'Sign in to access your mock projects and routes'}
+            </p>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Developer Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="developer@example.com"
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-                required
-              />
-            </div>
+            <Input
+              label="Developer Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="developer@example.com"
+              autoComplete="email"
+              required
+            />
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
-                required
-                minLength={8}
-              />
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-medium text-[#a1a1a6]">Password</label>
+              </div>
+              <div className="relative flex items-center">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  className="w-full bg-[#1c1c1e] border border-white/10 hover:border-white/20 rounded-xl py-2 pl-3 pr-10 text-xs font-mono text-[#f5f5f7] placeholder-[#6e6e73] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/60 focus:border-[#0071e3]"
+                  required
+                  minLength={8}
+                  autoComplete={isRegister ? 'new-password' : 'current-password'}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 text-[#86868b] hover:text-[#f5f5f7] p-1 rounded-full focus:outline-none"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                </button>
+              </div>
               {isRegister && (
-                <p className="text-[11px] text-slate-500 mt-1">Must be at least 8 characters long</p>
+                <p className="text-[11px] text-[#86868b] mt-1">Must be at least 8 characters long</p>
               )}
             </div>
 
             {error && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400">
-                {error}
+              <div className="p-3 bg-red-500/15 border border-red-500/30 rounded-xl text-xs text-[#ff453a] flex items-start space-x-2">
+                <span className="shrink-0 font-bold mt-0.5">&bull;</span>
+                <span>{error}</span>
               </div>
             )}
 
-            <button
+            <Button
               type="submit"
-              disabled={loading}
-              className="w-full mt-2 py-2.5 rounded-lg text-sm font-semibold text-black bg-emerald-400 hover:bg-emerald-300 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50"
+              variant="primary"
+              size="md"
+              loading={loading}
+              className="w-full mt-3 font-medium text-xs tracking-tight"
+              icon={<ArrowRight className="w-4 h-4 ml-0.5" />}
             >
-              <span>{loading ? 'Authenticating...' : isRegister ? 'Get Instant Free Access' : 'Sign In'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+              {loading ? 'Authenticating...' : isRegister ? 'Get Instant Free Access' : 'Sign In'}
+            </Button>
+
+            <p className="text-[11px] text-[#86868b] text-center pt-2">
+              By using Pseudoend, you agree to fair-use API limits to preserve cloud community safety.
+            </p>
           </form>
         </div>
+
       </div>
     </div>
   );
 };
-

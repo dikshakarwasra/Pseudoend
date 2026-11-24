@@ -8,10 +8,10 @@ import {
   ShoppingBag, 
   Share2, 
   CheckSquare, 
-  ArrowRight,
-  Database
+  ArrowRight
 } from 'lucide-react';
 import { Project, EnvironmentType } from '../types.js';
+import { Button } from '../components/ui/Button.js';
 
 interface ApiImportViewProps {
   activeProject: Project | null;
@@ -24,10 +24,10 @@ interface ApiImportViewProps {
 const TEMPLATES = [
   {
     id: 'ecommerce',
-    title: 'E-Commerce Store',
-    desc: 'Products, Categories, Orders, Customers with 1:N relational references.',
+    title: 'E-Commerce Store API',
+    desc: 'Products, Categories, Orders, Customers with 1:N relational foreign keys.',
     icon: ShoppingBag,
-    color: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
+    color: 'text-[#ff9f0a] bg-[#ff9f0a]/10 border-[#ff9f0a]/20',
     spec: {
       openapi: '3.0.0',
       info: { title: 'E-Commerce Store API', version: '1.0.0' },
@@ -78,7 +78,7 @@ const TEMPLATES = [
     title: 'Social Network API',
     desc: 'Users, Posts, Comments with author foreign-key bindings.',
     icon: Share2,
-    color: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
+    color: 'text-[#2997ff] bg-[#0071e3]/10 border-[#0071e3]/20',
     spec: {
       openapi: '3.0.0',
       info: { title: 'Social Network API', version: '1.0.0' },
@@ -121,7 +121,7 @@ const TEMPLATES = [
     title: 'Project & Task Tracker',
     desc: 'Projects, Tasks, Members with multi-entity task assignment.',
     icon: CheckSquare,
-    color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
+    color: 'text-[#bf5af2] bg-[#bf5af2]/10 border-[#bf5af2]/20',
     spec: {
       openapi: '3.0.0',
       info: { title: 'Task Manager API', version: '1.0.0' },
@@ -299,30 +299,32 @@ export const ApiImportView: React.FC<ApiImportViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 backdrop-blur-sm">
-        <div className="flex items-center space-x-2">
-          <FileUp className="w-5 h-5 text-emerald-400" />
-          <h2 className="text-base font-bold text-white tracking-tight">API Blueprint & OpenAPI Importer</h2>
+      <div className="bg-[#161617] p-6 rounded-2xl border border-white/10 shadow-xl">
+        <div className="flex items-center space-x-2.5">
+          <div className="w-8 h-8 rounded-full bg-[#0071e3]/10 border border-[#0071e3]/20 flex items-center justify-center text-[#2997ff]">
+            <FileUp className="w-4 h-4" />
+          </div>
+          <h2 className="text-base font-semibold text-white tracking-tight">API Blueprint & OpenAPI Importer</h2>
         </div>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[#86868b] mt-1.5 ml-10">
           Upload an OpenAPI 3.0 / Swagger schema to automatically generate stateful mock endpoints, relational graphs, and realistic data.
         </p>
       </div>
 
       {statusMessage && (
-        <div className={`p-4 rounded-xl text-xs flex items-center space-x-2 border ${
+        <div className={`p-4 rounded-xl text-xs flex items-center space-x-2.5 border ${
           statusMessage.error 
-            ? 'bg-red-500/10 border-red-500/30 text-red-400' 
-            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+            ? 'bg-[#ff453a]/10 border-[#ff453a]/30 text-[#ff453a]' 
+            : 'bg-[#0071e3]/10 border-[#0071e3]/30 text-[#2997ff]'
         }`}>
-          {statusMessage.error ? <AlertCircle className="w-4 h-4" /> : <Check className="w-4 h-4" />}
-          <span>{statusMessage.text}</span>
+          {statusMessage.error ? <AlertCircle className="w-4 h-4 shrink-0 text-[#ff453a]" /> : <Check className="w-4 h-4 shrink-0 text-[#2997ff]" />}
+          <span className="font-medium">{statusMessage.text}</span>
         </div>
       )}
 
       {/* Starter Blueprint Templates */}
       <div>
-        <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">
+        <h3 className="text-xs font-semibold text-[#86868b] uppercase tracking-wider mb-3 font-mono">
           Or Select a Pre-Built Blueprint Template
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -332,18 +334,20 @@ export const ApiImportView: React.FC<ApiImportViewProps> = ({
               <div
                 key={tmpl.id}
                 onClick={() => setSchemaText(JSON.stringify(tmpl.spec, null, 2))}
-                className="bg-slate-900/60 hover:bg-slate-800/80 p-4 rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer transition-all flex flex-col justify-between"
+                className="bg-[#161617] hover:bg-[#1c1c1e] p-5 rounded-2xl border border-white/10 hover:border-white/20 cursor-pointer transition-all flex flex-col justify-between shadow-lg group"
               >
                 <div>
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center border mb-3 ${tmpl.color}`}>
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center border mb-3.5 ${tmpl.color}`}>
                     <Icon className="w-4 h-4" />
                   </div>
-                  <h4 className="font-bold text-xs text-white mb-1">{tmpl.title}</h4>
-                  <p className="text-[11px] text-slate-400">{tmpl.desc}</p>
+                  <h4 className="font-semibold text-sm text-white mb-1 group-hover:text-[#2997ff] transition-colors">
+                    {tmpl.title}
+                  </h4>
+                  <p className="text-xs text-[#86868b] leading-relaxed">{tmpl.desc}</p>
                 </div>
-                <span className="text-[10px] text-emerald-400 font-mono mt-3 flex items-center space-x-1">
+                <span className="text-xs text-[#2997ff] font-medium mt-4 flex items-center space-x-1">
                   <span>Load Schema</span>
-                  <ArrowRight className="w-3 h-3" />
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </span>
               </div>
             );
@@ -352,32 +356,34 @@ export const ApiImportView: React.FC<ApiImportViewProps> = ({
       </div>
 
       {/* Blueprint Editor */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-sm space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="bg-[#161617] border border-white/10 rounded-2xl p-5 space-y-4 shadow-xl">
+        <div className="flex items-center justify-between pb-3 border-b border-white/5">
           <div className="flex items-center space-x-2">
-            <Code className="w-4 h-4 text-emerald-400" />
+            <Code className="w-4 h-4 text-[#2997ff]" />
             <span className="text-xs font-semibold text-white">OpenAPI / Swagger JSON Blueprint</span>
           </div>
-          <span className="text-[11px] text-slate-500 font-mono">OpenAPI 3.0 / 3.1 Spec</span>
+          <span className="text-[11px] text-[#86868b] font-mono">OpenAPI 3.0 / 3.1 Spec</span>
         </div>
 
         <textarea
           rows={16}
           value={schemaText}
           onChange={(e) => setSchemaText(e.target.value)}
-          className="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs font-mono text-emerald-300 focus:outline-none focus:border-emerald-500"
+          className="w-full bg-[#000000] border border-white/10 rounded-xl p-4 text-xs font-mono text-[#d2d2d7] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:border-transparent leading-relaxed"
           placeholder="Paste OpenAPI 3.0 JSON specification here..."
+          spellCheck={false}
         />
 
         <div className="flex justify-end">
-          <button
+          <Button
+            variant="primary"
+            size="md"
+            loading={importing}
+            icon={<Sparkles className="w-4 h-4" />}
             onClick={handleImport}
-            disabled={importing}
-            className="flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-5 py-2.5 rounded-lg text-xs transition-colors shadow-lg shadow-emerald-500/10"
           >
-            <Sparkles className={`w-4 h-4 ${importing ? 'animate-spin' : ''}`} />
-            <span>{importing ? 'Generating APIs & Graphs...' : 'Generate Mock Platform'}</span>
-          </button>
+            {importing ? 'Generating APIs & Graphs...' : 'Generate Mock Platform'}
+          </Button>
         </div>
       </div>
     </div>

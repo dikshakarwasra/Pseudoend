@@ -4,17 +4,15 @@ import {
   Play, 
   CheckCircle2, 
   XCircle, 
-  Clock, 
   Download, 
   FileText, 
   History, 
-  AlertTriangle, 
   Zap, 
-  Filter,
-  RefreshCw,
-  TrendingUp
+  RefreshCw
 } from 'lucide-react';
 import { Project, EnvironmentType, TestReportRecord, TestResultItem } from '../types.js';
+import { Button } from '../components/ui/Button.js';
+import { Badge } from '../components/ui/Badge.js';
 
 interface ApiTestingViewProps {
   activeProject: Project | null;
@@ -106,13 +104,11 @@ export const ApiTestingView: React.FC<ApiTestingViewProps> = ({
     window.open(`${apiBaseUrl}/api/testing/${activeProject.id}/reports/${activeReport.id}/html`, '_blank');
   };
 
-  // Metrics
   const total = activeReport?.totalTests || 0;
   const passed = activeReport?.passed || 0;
   const failed = activeReport?.failed || 0;
   const passRate = total > 0 ? Math.round((passed / total) * 100) : 100;
 
-  // Filtered results
   const filteredResults = (activeReport?.results || []).filter(r => {
     if (filterStatus === 'PASSED') return r.passed;
     if (filterStatus === 'FAILED') return !r.passed;
@@ -122,74 +118,76 @@ export const ApiTestingView: React.FC<ApiTestingViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Action Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800 backdrop-blur-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-[#161617] p-5 rounded-3xl border border-white/10 shadow-apple-sm">
         <div>
           <div className="flex items-center space-x-2">
-            <Activity className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-base font-bold text-white tracking-tight">Automatic API Health & Testing Report</h2>
-            <span className="text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded">
-              Feature 3
+            <Activity className="w-5 h-5 text-[#2997ff]" />
+            <h2 className="text-base font-semibold text-white tracking-tight">API Health & Testing Suite</h2>
+            <span className="text-[10px] font-mono uppercase bg-[#0071e3]/15 text-[#2997ff] border border-[#0071e3]/30 px-2.5 py-0.5 rounded-full font-medium">
+              E2E Diagnostics
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
-            End-to-end automated validation verifying status codes, response schemas, and latency benchmarks.
+          <p className="text-xs text-[#a1a1a6] mt-1">
+            Validate HTTP status codes, JSON schema conformances, and response latency benchmarks.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <label className="flex items-center space-x-2 text-xs text-slate-300 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg cursor-pointer">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <label className="flex items-center space-x-2 text-xs text-[#d2d2d7] bg-[#1c1c1e] border border-white/10 px-3.5 py-2 rounded-full cursor-pointer hover:border-white/20 transition-colors">
             <input
               type="checkbox"
               checked={includeChaos}
               onChange={(e) => setIncludeChaos(e.target.checked)}
-              className="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0"
+              className="rounded bg-[#000000] border-white/20 text-[#0071e3] focus:ring-0"
             />
-            <span className="flex items-center space-x-1">
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span>Simulate Chaos Conditions</span>
+            <span className="flex items-center space-x-1.5">
+              <Zap className="w-3.5 h-3.5 text-[#ff9f0a]" />
+              <span>Chaos Conditions</span>
             </span>
           </label>
 
-          <button
+          <Button
+            variant="primary"
+            size="md"
+            loading={running}
+            icon={<Play className="w-3.5 h-3.5 fill-current" />}
             onClick={handleRunTests}
-            disabled={running}
-            className="flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 py-2 rounded-lg text-xs transition-colors shadow-lg shadow-emerald-500/10"
           >
-            <Play className={`w-3.5 h-3.5 fill-current ${running ? 'animate-spin' : ''}`} />
-            <span>{running ? 'Executing Tests...' : `Run Test Suite (${activeEnvironment.toUpperCase()})`}</span>
-          </button>
+            {running ? 'Executing Tests...' : `Run Test Suite (${activeEnvironment.toUpperCase()})`}
+          </Button>
         </div>
       </div>
 
       {loading && !activeReport ? (
-        <div className="text-center py-20 text-xs text-slate-400 flex items-center justify-center space-x-2">
-          <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
+        <div className="text-center py-20 text-xs text-[#86868b] flex items-center justify-center space-x-2 font-mono">
+          <RefreshCw className="w-4 h-4 animate-spin text-[#2997ff]" />
           <span>Loading historical test reports...</span>
         </div>
       ) : !activeReport ? (
-        <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-12 text-center">
-          <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto mb-3 text-slate-400">
+        <div className="bg-[#161617] border border-white/10 rounded-3xl p-12 text-center shadow-apple-sm">
+          <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-3 text-[#a1a1a6]">
             <Activity className="w-6 h-6" />
           </div>
           <h3 className="text-sm font-semibold text-white mb-1">No Test Runs Executed Yet</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto mb-4">
-            Click "Run Test Suite" to automatically test every configured mock endpoint in the active environment.
+          <p className="text-xs text-[#a1a1a6] max-w-sm mx-auto mb-4 leading-relaxed">
+            Execute the test suite to automatically probe and validate every mock endpoint in the active environment.
           </p>
-          <button
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Play className="w-3.5 h-3.5 fill-current" />}
             onClick={handleRunTests}
-            className="inline-flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold"
           >
-            <Play className="w-4 h-4 fill-current" />
-            <span>Execute Health Tests</span>
-          </button>
+            Execute Health Tests
+          </Button>
         </div>
       ) : (
         <div className="space-y-6">
           {/* Summary Dashboard Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
             {/* Donut Chart Card */}
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-sm flex flex-col items-center justify-center text-center">
-              <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Health Pass Rate</div>
+            <div className="bg-[#161617] border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-apple-sm">
+              <div className="text-xs font-semibold text-[#86868b] uppercase tracking-wider mb-2 font-mono">Pass Rate</div>
 
               {/* SVG Donut Chart */}
               <div className="relative w-32 h-32 my-1">
@@ -199,16 +197,16 @@ export const ApiTestingView: React.FC<ApiTestingViewProps> = ({
                     cy="50"
                     r="40"
                     fill="transparent"
-                    stroke="#1E293B"
-                    strokeWidth="12"
+                    stroke="#2c2c2e"
+                    strokeWidth="10"
                   />
                   <circle
                     cx="50"
                     cy="50"
                     r="40"
                     fill="transparent"
-                    stroke={passRate === 100 ? '#10B981' : passRate >= 80 ? '#F59E0B' : '#EF4444'}
-                    strokeWidth="12"
+                    stroke={passRate === 100 ? '#30d158' : passRate >= 80 ? '#ff9f0a' : '#ff453a'}
+                    strokeWidth="10"
                     strokeDasharray={251.2}
                     strokeDashoffset={251.2 - (251.2 * passRate) / 100}
                     strokeLinecap="round"
@@ -217,62 +215,66 @@ export const ApiTestingView: React.FC<ApiTestingViewProps> = ({
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-2xl font-bold font-mono text-white">{passRate}%</span>
-                  <span className="text-[10px] text-slate-400 uppercase font-mono">Passed</span>
+                  <span className="text-[10px] text-[#86868b] uppercase font-mono">Passed</span>
                 </div>
               </div>
 
               <div className="flex items-center space-x-4 text-xs font-mono mt-2">
-                <span className="text-emerald-400 font-semibold">{passed} Passed</span>
-                <span className="text-slate-600">|</span>
-                <span className="text-red-400 font-semibold">{failed} Failed</span>
+                <span className="text-[#30d158] font-semibold">{passed} Passed</span>
+                <span className="text-white/20">|</span>
+                <span className="text-[#ff453a] font-semibold">{failed} Failed</span>
               </div>
             </div>
 
-            {/* Performance Analytics */}
+            {/* Performance Analytics (3 cols) */}
             <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-sm flex flex-col justify-between">
+              <div className="bg-[#161617] border border-white/10 rounded-3xl p-6 flex flex-col justify-between shadow-apple-sm">
                 <div>
-                  <div className="text-xs text-slate-400">Total Endpoints Tested</div>
+                  <div className="text-xs text-[#a1a1a6]">Total Endpoints Tested</div>
                   <div className="text-3xl font-bold text-white font-mono mt-2">{total}</div>
                 </div>
-                <div className="text-[11px] text-slate-500 mt-4 flex items-center space-x-1">
+                <div className="text-[11px] text-[#86868b] mt-4 flex items-center space-x-1">
                   <span>Environment:</span>
-                  <span className="font-mono text-emerald-400 font-bold uppercase">{activeReport.environment}</span>
+                  <span className="font-mono text-[#2997ff] font-bold uppercase">{activeReport.environment}</span>
                 </div>
               </div>
 
-              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-sm flex flex-col justify-between">
+              <div className="bg-[#161617] border border-white/10 rounded-3xl p-6 flex flex-col justify-between shadow-apple-sm">
                 <div>
-                  <div className="text-xs text-slate-400">Average Response Time</div>
-                  <div className="text-3xl font-bold text-cyan-400 font-mono mt-2">{activeReport.avgDurationMs}ms</div>
+                  <div className="text-xs text-[#a1a1a6]">Average Response Time</div>
+                  <div className="text-3xl font-bold text-[#64d2ff] font-mono mt-2">{activeReport.avgDurationMs}ms</div>
                 </div>
-                <div className="text-[11px] text-slate-500 mt-4 flex items-center justify-between font-mono">
+                <div className="text-[11px] text-[#86868b] mt-4 flex items-center justify-between font-mono">
                   <span>Min: {activeReport.minDurationMs}ms</span>
                   <span>Max: {activeReport.maxDurationMs}ms</span>
                 </div>
               </div>
 
-              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-sm flex flex-col justify-between">
+              <div className="bg-[#161617] border border-white/10 rounded-3xl p-6 flex flex-col justify-between shadow-apple-sm">
                 <div>
-                  <div className="text-xs text-slate-400">Report Metadata</div>
-                  <div className="text-xs font-mono text-slate-200 mt-2 truncate">ID: {activeReport.id}</div>
-                  <div className="text-[11px] text-slate-400 mt-1">{new Date(activeReport.timestamp).toLocaleString()}</div>
+                  <div className="text-xs text-[#a1a1a6]">Export Report</div>
+                  <div className="text-xs font-mono text-[#d2d2d7] mt-2 truncate">ID: {activeReport.id}</div>
+                  <div className="text-[11px] text-[#86868b] mt-0.5">{new Date(activeReport.timestamp).toLocaleString()}</div>
                 </div>
                 <div className="flex space-x-2 mt-4">
-                  <button
+                  <Button
+                    variant="secondary"
+                    size="xs"
+                    icon={<Download className="w-3.5 h-3.5" />}
                     onClick={downloadHtmlReport}
-                    className="flex-1 flex items-center justify-center space-x-1 bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs font-medium border border-slate-700 transition-colors"
+                    className="flex-1"
                   >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>HTML</span>
-                  </button>
-                  <button
+                    HTML
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="xs"
+                    icon={<FileText className="w-3.5 h-3.5" />}
                     onClick={downloadJsonReport}
-                    className="flex-1 flex items-center justify-center space-x-1 bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs font-medium border border-slate-700 transition-colors"
+                    className="flex-1"
                   >
-                    <FileText className="w-3.5 h-3.5" />
-                    <span>JSON</span>
-                  </button>
+                    JSON
+                  </Button>
                 </div>
               </div>
             </div>
@@ -281,7 +283,7 @@ export const ApiTestingView: React.FC<ApiTestingViewProps> = ({
           {/* Report History Tabs */}
           {reports.length > 1 && (
             <div className="flex items-center space-x-2 overflow-x-auto pb-1 text-xs">
-              <span className="text-slate-400 shrink-0 flex items-center space-x-1">
+              <span className="text-[#86868b] shrink-0 flex items-center space-x-1">
                 <History className="w-3.5 h-3.5" />
                 <span>History:</span>
               </span>
@@ -289,10 +291,10 @@ export const ApiTestingView: React.FC<ApiTestingViewProps> = ({
                 <button
                   key={r.id}
                   onClick={() => setActiveReport(r)}
-                  className={`px-3 py-1.5 rounded-lg shrink-0 font-mono transition-colors border ${
+                  className={`px-3 py-1.5 rounded-full shrink-0 font-mono transition-colors border ${
                     activeReport.id === r.id
-                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold'
-                      : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
+                      ? 'bg-[#0071e3] text-white border-[#0071e3] font-semibold'
+                      : 'bg-[#1c1c1e] text-[#a1a1a6] border-white/10 hover:text-white'
                   }`}
                 >
                   #{reports.length - i} ({r.environment}) - {new Date(r.timestamp).toLocaleTimeString()}
@@ -302,18 +304,18 @@ export const ApiTestingView: React.FC<ApiTestingViewProps> = ({
           )}
 
           {/* Endpoint Test Results Table */}
-          <div className="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden backdrop-blur-sm">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-              <div className="font-semibold text-xs text-white uppercase tracking-wider">
-                Endpoint Execution Diagnostics
+          <div className="bg-[#161617] border border-white/10 rounded-3xl overflow-hidden shadow-apple-sm">
+            <div className="p-4 border-b border-white/10 flex items-center justify-between">
+              <div className="font-semibold text-xs text-[#f5f5f7] uppercase tracking-wider font-mono">
+                Endpoint Diagnostics
               </div>
-              <div className="flex space-x-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+              <div className="flex space-x-1 bg-[#1c1c1e] p-1 rounded-full border border-white/10 text-xs">
                 {(['ALL', 'PASSED', 'FAILED'] as const).map(f => (
                   <button
                     key={f}
                     onClick={() => setFilterStatus(f)}
-                    className={`px-2.5 py-0.5 rounded transition-colors ${
-                      filterStatus === f ? 'bg-slate-800 text-white font-medium' : 'text-slate-400 hover:text-white'
+                    className={`px-3 py-0.5 rounded-full text-[11px] font-mono transition-colors ${
+                      filterStatus === f ? 'bg-[#0071e3] text-white font-medium' : 'text-[#86868b] hover:text-white'
                     }`}
                   >
                     {f}
@@ -322,81 +324,78 @@ export const ApiTestingView: React.FC<ApiTestingViewProps> = ({
               </div>
             </div>
 
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 uppercase font-mono text-[11px]">
-                  <th className="py-3 px-4">Method & Path</th>
-                  <th className="py-3 px-4 text-center">Expected</th>
-                  <th className="py-3 px-4 text-center">Actual Status</th>
-                  <th className="py-3 px-4 text-right">Latency</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Failure Diagnostics</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono">
-                {filteredResults.map((result) => {
-                  return (
-                    <tr key={result.routeId} className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 font-semibold">
-                        <span className={`px-1.5 py-0.5 rounded text-[10px] mr-2 ${
-                          result.method === 'GET' ? 'bg-emerald-500/10 text-emerald-400' :
-                          result.method === 'POST' ? 'bg-blue-500/10 text-blue-400' :
-                          result.method === 'DELETE' ? 'bg-red-500/10 text-red-400' :
-                          'bg-amber-500/10 text-amber-400'
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-white/10 bg-[#121213] text-[#86868b] uppercase font-mono text-[10px] tracking-wider">
+                    <th className="py-3 px-4 font-medium">Method & Path</th>
+                    <th className="py-3 px-4 font-medium text-center">Expected</th>
+                    <th className="py-3 px-4 font-medium text-center">Actual Status</th>
+                    <th className="py-3 px-4 font-medium text-right">Latency</th>
+                    <th className="py-3 px-4 font-medium">Result</th>
+                    <th className="py-3 px-4 font-medium">Failure Diagnostics</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 font-mono">
+                  {filteredResults.map((result) => {
+                    return (
+                      <tr key={result.routeId} className="hover:bg-white/[0.03] transition-colors">
+                        <td className="py-3.5 px-4 font-semibold">
+                          <span className="mr-2">
+                            <Badge method={result.method} size="sm" />
+                          </span>
+                          <span className="text-[#f5f5f7]">{result.path}</span>
+                        </td>
+
+                        <td className="py-3.5 px-4 text-center text-[#a1a1a6] font-mono">
+                          {result.expectedStatus}
+                        </td>
+
+                        <td className={`py-3.5 px-4 text-center font-bold font-mono ${
+                          result.passed ? 'text-[#30d158]' : 'text-[#ff453a]'
                         }`}>
-                          {result.method}
-                        </span>
-                        <span className="text-slate-200">{result.path}</span>
-                      </td>
+                          {result.actualStatus}
+                        </td>
 
-                      <td className="py-3 px-4 text-center text-slate-400 font-mono">
-                        {result.expectedStatus}
-                      </td>
-
-                      <td className={`py-3 px-4 text-center font-bold font-mono ${
-                        result.passed ? 'text-emerald-400' : 'text-red-400'
-                      }`}>
-                        {result.actualStatus}
-                      </td>
-
-                      <td className="py-3 px-4 text-right font-mono">
-                        <span className={`px-2 py-0.5 rounded text-[11px] ${
-                          result.durationMs < 100 ? 'bg-emerald-500/10 text-emerald-400' :
-                          result.durationMs < 300 ? 'bg-amber-500/10 text-amber-400' :
-                          'bg-red-500/10 text-red-400'
-                        }`}>
-                          {result.durationMs}ms
-                        </span>
-                      </td>
-
-                      <td className="py-3 px-4">
-                        {result.passed ? (
-                          <span className="inline-flex items-center space-x-1 text-emerald-400 text-xs font-semibold">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>PASSED</span>
+                        <td className="py-3.5 px-4 text-right font-mono">
+                          <span className={`px-2.5 py-0.5 rounded-full text-[11px] ${
+                            result.durationMs < 100 ? 'bg-[#30d158]/15 text-[#30d158]' :
+                            result.durationMs < 300 ? 'bg-[#ff9f0a]/15 text-[#ff9f0a]' :
+                            'bg-[#ff453a]/15 text-[#ff453a]'
+                          }`}>
+                            {result.durationMs}ms
                           </span>
-                        ) : (
-                          <span className="inline-flex items-center space-x-1 text-red-400 text-xs font-semibold">
-                            <XCircle className="w-3.5 h-3.5" />
-                            <span>FAILED</span>
-                          </span>
-                        )}
-                      </td>
+                        </td>
 
-                      <td className="py-3 px-4 text-slate-400 font-sans text-xs">
-                        {result.error ? (
-                          <span className="text-red-300 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20 font-mono text-[11px]">
-                            {result.error}
-                          </span>
-                        ) : (
-                          <span className="text-slate-600">Passed schema & status verification</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        <td className="py-3.5 px-4">
+                          {result.passed ? (
+                            <span className="inline-flex items-center space-x-1.5 text-[#30d158] text-xs font-medium">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>PASSED</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center space-x-1.5 text-[#ff453a] text-xs font-medium">
+                              <XCircle className="w-3.5 h-3.5" />
+                              <span>FAILED</span>
+                            </span>
+                          )}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[#a1a1a6] font-sans text-xs">
+                          {result.error ? (
+                            <span className="text-[#ff453a] bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20 font-mono text-[11px]">
+                              {result.error}
+                            </span>
+                          ) : (
+                            <span className="text-[#6e6e73]">Passed schema & status verification</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { X, Zap, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Zap, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Modal } from './ui/Modal.js';
+import { Button } from './ui/Button.js';
 
 interface QuotaRequestModalProps {
   isOpen: boolean;
@@ -42,117 +44,118 @@ export const QuotaRequestModal: React.FC<QuotaRequestModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-lg w-full p-6 shadow-2xl relative">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-slate-400 hover:text-white p-1 rounded-lg"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center space-x-2.5 mb-2">
-          <Zap className="w-5 h-5 text-amber-400" />
-          <h3 className="text-lg font-bold text-white">Request Credit Limit Increase</h3>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={
+        <div className="flex items-center gap-2">
+          <Zap className="w-5 h-5 text-[#ff9f0a]" />
+          <span>Request Credit Limit Increase</span>
         </div>
-
-        {submitted ? (
-          <div className="text-center py-6">
-            <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-            <h4 className="text-base font-bold text-white mb-1">Upgrade Request Submitted!</h4>
-            <p className="text-xs text-slate-400 mb-6 max-w-sm mx-auto">
-              Your request for the <strong>{requestedTier.toUpperCase()}</strong> tier has been sent to the administrator review queue. Upgrades are reviewed quickly to maintain community server safety.
-            </p>
-            <button
-              onClick={onClose}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300"
-            >
-              Back to Dashboard
-            </button>
+      }
+      description="Expand your daily mock request quotas for active development and team prototyping."
+      maxWidth="lg"
+    >
+      {submitted ? (
+        <div className="text-center py-6">
+          <div className="w-12 h-12 rounded-full bg-[#0071e3]/10 border border-[#0071e3]/30 flex items-center justify-center mx-auto mb-3 text-[#2997ff]">
+            <CheckCircle2 className="w-6 h-6" />
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 text-xs text-amber-300 flex items-start space-x-2.5">
-              <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5" />
-              <div>
-                <strong>Zero-Paid Community Model:</strong> Pseudoend does not charge credit cards. Higher limits are granted manually by administrators to prevent cloud resource abuse.
+          <h4 className="text-base font-semibold text-white mb-1">Upgrade Request Submitted</h4>
+          <p className="text-xs text-[#86868b] mb-6 max-w-sm mx-auto leading-relaxed">
+            Your request for the <strong className="text-[#2997ff] uppercase font-mono">{requestedTier}</strong> tier has been routed to the administrator review queue. Upgrades are approved quickly to safeguard community infrastructure.
+          </p>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={onClose}
+          >
+            Back to Dashboard
+          </Button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="bg-[#ff9f0a]/10 border border-[#ff9f0a]/20 rounded-2xl p-3.5 text-xs text-[#ff9f0a] flex items-start space-x-2.5">
+            <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
+            <div className="leading-relaxed">
+              <strong>Zero-Paid Community Model:</strong> Pseudoend never charges credit cards. Daily credit increases are granted free by administrators to prevent cloud abuse.
+            </div>
+          </div>
+
+          <div>
+            <div className="text-xs font-medium text-[#86868b] mb-2">
+              Current Tier: <strong className="text-white capitalize">{currentTier}</strong>
+            </div>
+            <label className="block text-xs font-medium text-[#86868b] mb-1.5">Select Desired Tier</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div
+                onClick={() => setRequestedTier('developer')}
+                className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                  requestedTier === 'developer'
+                    ? 'border-[#0071e3] bg-[#0071e3]/10 text-white shadow-sm ring-1 ring-[#0071e3]'
+                    : 'border-white/10 bg-[#161617] text-[#86868b] hover:border-white/20'
+                }`}
+              >
+                <div className="font-semibold text-sm text-white">Developer Tier</div>
+                <div className="text-[11px] text-[#2997ff] font-mono mt-0.5 font-bold">10,000 req / day</div>
+                <div className="text-[10px] text-[#86868b] mt-1">For active frontend prototypes</div>
+              </div>
+
+              <div
+                onClick={() => setRequestedTier('pro')}
+                className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                  requestedTier === 'pro'
+                    ? 'border-[#0071e3] bg-[#0071e3]/10 text-white shadow-sm ring-1 ring-[#0071e3]'
+                    : 'border-white/10 bg-[#161617] text-[#86868b] hover:border-white/20'
+                }`}
+              >
+                <div className="font-semibold text-sm text-white">Pro Tier</div>
+                <div className="text-[11px] text-[#2997ff] font-mono mt-0.5 font-bold">50,000 req / day</div>
+                <div className="text-[10px] text-[#86868b] mt-1">For team testing & hackathons</div>
               </div>
             </div>
+          </div>
 
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Current Tier: <strong className="text-white capitalize">{currentTier}</strong>
-              </label>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Desired Tier</label>
-              <div className="grid grid-cols-2 gap-3">
-                <div
-                  onClick={() => setRequestedTier('developer')}
-                  className={`p-3 rounded-lg border cursor-pointer transition-all ${
-                    requestedTier === 'developer'
-                      ? 'border-emerald-500 bg-emerald-500/10 text-white'
-                      : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
-                  }`}
-                >
-                  <div className="font-semibold text-sm">Developer Tier</div>
-                  <div className="text-[11px] text-emerald-400 font-mono mt-0.5">10,000 req / day</div>
-                  <div className="text-[10px] text-slate-500 mt-1">For active frontend prototypes</div>
-                </div>
+          <div>
+            <label className="block text-xs font-medium text-[#86868b] mb-1.5">
+              Project Context / Justification
+            </label>
+            <textarea
+              rows={3}
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="Briefly describe what frontend application or project you are building..."
+              className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl p-3 text-xs text-white placeholder-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
+              required
+            />
+          </div>
 
-                <div
-                  onClick={() => setRequestedTier('pro')}
-                  className={`p-3 rounded-lg border cursor-pointer transition-all ${
-                    requestedTier === 'pro'
-                      ? 'border-emerald-500 bg-emerald-500/10 text-white'
-                      : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
-                  }`}
-                >
-                  <div className="font-semibold text-sm">Pro Tier</div>
-                  <div className="text-[11px] text-emerald-400 font-mono mt-0.5">50,000 req / day</div>
-                  <div className="text-[10px] text-slate-500 mt-1">For team testing & hackathons</div>
-                </div>
-              </div>
+          {error && (
+            <div className="text-xs text-[#ff453a] bg-[#ff453a]/10 border border-[#ff453a]/20 p-2.5 rounded-xl">
+              {error}
             </div>
+          )}
 
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Project Context / Justification
-              </label>
-              <textarea
-                rows={3}
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder="Briefly describe what frontend application or project you are developing..."
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-                required
-              />
-            </div>
-
-            {error && (
-              <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 p-2.5 rounded-lg">
-                {error}
-              </p>
-            )}
-
-            <div className="flex justify-end space-x-2 pt-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={submitting}
-                className="px-5 py-2 rounded-lg text-xs font-medium text-black bg-emerald-400 hover:bg-emerald-300 font-semibold transition-colors disabled:opacity-50"
-              >
-                {submitting ? 'Submitting...' : 'Submit Request'}
-              </button>
-            </div>
-          </form>
-        )}
-      </div>
-    </div>
+          <div className="flex justify-end space-x-2 pt-2">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              loading={submitting}
+            >
+              {submitting ? 'Submitting...' : 'Submit Request'}
+            </Button>
+          </div>
+        </form>
+      )}
+    </Modal>
   );
 };
-

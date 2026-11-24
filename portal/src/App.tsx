@@ -9,7 +9,7 @@ import { MockStudioView } from './views/MockStudioView.js';
 import { LiveInspectorView } from './views/LiveInspectorView.js';
 import { AdminConsoleView } from './views/AdminConsoleView.js';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://hvr5wkatpa.execute-api.us-east-1.amazonaws.com';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://8dbk9yr376.execute-api.us-east-1.amazonaws.com';
 
 export function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('pseudoend_token') || localStorage.getItem('sudoend_token'));

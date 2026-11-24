@@ -157,6 +157,9 @@ if (Test-Path "portal" -and $apiUrl) {
                 if ($matchedUrl) {
                     $vercelUrl = $matchedUrl
                     Write-Host "[OK] Vercel Production Deployment Live: $vercelUrl" -ForegroundColor Green
+                } elseif ($vercelOutput -match "No existing credentials found") {
+                    Write-Host "[INFO] Vercel CLI is not authenticated locally." -ForegroundColor Yellow
+                    Write-Host "       Run 'npx vercel login' once to log in, or deploy automatically via GitHub push." -ForegroundColor DarkGray
                 }
             } catch {
                 Write-Host "[INFO] Vercel CLI deployment skipped or unauthenticated (you can deploy via GitHub integration)." -ForegroundColor DarkGray

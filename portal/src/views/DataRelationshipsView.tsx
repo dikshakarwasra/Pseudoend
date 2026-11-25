@@ -310,10 +310,10 @@ export const DataRelationshipsView: React.FC<DataRelationshipsViewProps> = ({
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
-        className="relative w-full h-[580px] bg-[#f8f8fa] border border-[#d2d2d7] rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing select-none shadow-apple-md"
+        className="relative w-full h-[580px] bg-[#f0f0f5] border border-[#d2d2d7] rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing select-none shadow-apple-md"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgba(0, 0, 0, 0.07) 1px, transparent 1px)',
-          backgroundSize: '24px 24px'
+          backgroundImage: 'radial-gradient(circle, rgba(0, 0, 0, 0.18) 1.5px, transparent 1.5px)',
+          backgroundSize: '20px 20px'
         }}
       >
         {loading ? (

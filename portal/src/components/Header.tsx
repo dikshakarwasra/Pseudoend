@@ -134,11 +134,13 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }}
             className="flex items-center space-x-2.5 text-left focus:outline-none group"
           >
-            <img
-              src="/logo.png"
-              alt="Pseudoend"
-              className="w-8 h-8 rounded-xl object-contain transition-transform group-hover:scale-105"
-            />
+            <div className="w-8 h-8 rounded-xl overflow-hidden shrink-0 shadow-sm transition-transform group-hover:scale-105" style={{ background: '#2e2e32' }}>
+              <img
+                src="/logo.png"
+                alt="Pseudoend"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <span className="font-bold text-base tracking-tight text-[#1d1d1f] font-mono">
               PSEUDOEND
             </span>

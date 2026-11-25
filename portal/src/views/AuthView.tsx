@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, ShieldCheck, Zap, Server, ArrowRight, Eye, EyeOff, Code2 } from 'lucide-react';
+import { ShieldCheck, Zap, Server, ArrowRight, Eye, EyeOff, Code2 } from 'lucide-react';
 import { User, Project } from '../types.js';
 import { Button } from '../components/ui/Button.js';
 import { Input } from '../components/ui/Input.js';
@@ -69,9 +69,11 @@ export const AuthView: React.FC<AuthViewProps> = ({ onAuthSuccess, apiBaseUrl })
           <div>
             {/* Logo */}
             <div className="flex items-center space-x-2.5 mb-7">
-              <div className="w-9 h-9 rounded-xl bg-[#0071e3] text-white flex items-center justify-center shadow-apple-blue">
-                <Terminal className="w-4 h-4" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="Pseudoend"
+                className="w-9 h-9 rounded-xl object-contain"
+              />
               <span className="font-bold text-lg tracking-tight text-[#1d1d1f] font-mono">
                 PSEUDOEND
               </span>

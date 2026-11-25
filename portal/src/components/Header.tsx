@@ -134,9 +134,11 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }}
             className="flex items-center space-x-2.5 text-left focus:outline-none group"
           >
-            <div className="w-8 h-8 rounded-xl bg-[#0071e3] text-white flex items-center justify-center shadow-apple-blue transition-transform group-hover:scale-105">
-              <Terminal className="w-4 h-4" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="Pseudoend"
+              className="w-8 h-8 rounded-xl object-contain transition-transform group-hover:scale-105"
+            />
             <span className="font-bold text-base tracking-tight text-[#1d1d1f] font-mono">
               PSEUDOEND
             </span>
